@@ -159,7 +159,7 @@ body {
 .contenedor-imagen h4 {
     margin-bottom: 15px;
     font-size: 22px;
-    color: gray;
+    color: black;
 }
 
 .contenedor-imagen img {
@@ -172,7 +172,7 @@ body {
     flex: 1;
     font-size: 16px;
     line-height: 1.6;
-    color: gray;
+    color: black;
 }
 
 /*Pie de página*/
