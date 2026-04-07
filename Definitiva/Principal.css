@@ -1,0 +1,298 @@
+/*Cabecera*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: lightblue;
+    border-bottom: 2px solid lightblue;
+    padding: 15px 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+}
+
+.cabecera-left .logo {
+    height: 50px;
+    width: auto;
+    border-radius: 50%;
+}
+
+.cabecera-center {
+    text-align: center;
+}
+
+.cabecera-center h1 {
+    font-size: 28px;
+    color: black;
+    margin: 0;
+}
+
+.cabecera-center p {
+    font-size: 14px;
+    color: white;
+    margin: 4px 0 0 0;
+}
+
+.cabecera-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/*Damos primeiro os estilos aos enlaces para que non apareza o menu desplegado o abrir a pagina*/
+.desplegable a {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+}
+
+.desplegable a:hover {
+    background-color: lightpink;
+    color: white;
+}
+
+.menu-checkbox {
+    display: none;
+}
+
+.hamburger-menu {
+    position: relative;
+}
+
+.hamburger {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: black;
+    padding: 8px;
+}
+
+.hamburger:hover {
+    background-color: gray;
+}
+
+.desplegable {
+    display: none;
+    list-style: none;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    width: 150px;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 2000;
+}
+
+.menu-checkbox:checked~.desplegable {
+    display: block;
+}
+
+.desplegable li {
+    border-bottom: 1px solid whitesmoke;
+}
+
+.desplegable li:last-child {
+    border-bottom: none;
+}
+
+
+.cabecera-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-link {
+    font-size: 20px;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.icon-link:hover {
+    background-color: gray;
+}
+
+/*Cuerpo*/
+.cuerpo {
+    padding: 50px 10%;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.cuerpo-up {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.cuerpo-up:nth-child(1) {
+    flex-direction: row-reverse;
+}
+
+.contenedor-imagen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.contenedor-imagen h4 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    color: gray;
+}
+
+.contenedor-imagen img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.texto-seccion {
+    flex: 1;
+    font-size: 16px;
+    line-height: 1.6;
+    color: gray;
+}
+
+/*Pie de página*/
+.pie {
+    background-color: lightpink;
+    border-top: 1px solid whitesmoke;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.pie-right {
+    text-align: right;
+}
+
+.pie-right p {
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+}
+
+.pie-left .logo {
+    height: 40px;
+    width: auto;
+    margin-bottom: 10px;
+    display: block;
+    border-radius: 50%;
+}
+
+.pie-left p {
+    margin: 6px 0;
+    font-size: 18px;
+    color: black;
+    line-height: 1.4;
+}
+
+/*Responsive para tablets*/
+@media (max-width: 768px) {
+    .cabecera {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .cabecera-left {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .cabecera-right {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+    }
+
+    .cabecera-center {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+        padding-top: 5px;
+    }
+
+    .cabecera-center h1 {
+        font-size: 24px;
+    }
+
+    .cuerpo-up,
+    .cuerpo-up:nth-child(1) {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .texto-seccion {
+        padding: 0 10px;
+    }
+
+    .pie-left p {
+        font-size: 14px;
+    }
+
+    .pie-right p {
+        font-size: 14px;
+    }
+}
+
+/*Responsive para moviles*/
+@media (max-width: 576px) {
+    .cabecera-center h1 {
+        font-size: 20px;
+    }
+
+    .cabecera-center p {
+        font-size: 11px;
+    }
+
+    .cabecera-left .logo {
+        height: 40px;
+    }
+
+    .icon-link {
+        font-size: 18px;
+        padding: 5px 8px;
+    }
+
+    .cuerpo {
+        padding: 30px 5%;
+        gap: 40px;
+    }
+
+    .contenedor-imagen h4 {
+        font-size: 18px;
+    }
+
+    .pie-left p {
+        font-size: 12px;
+    }
+
+    .pie-right p {
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,58 @@
+/**
+ * cart.js - Funcionalidad principal para el carrito de la compra
+ */
+
+const CART_STORAGE_KEY = 'doces_e_mecos_cart';
+
+// Obtener el carrito de localStorage
+function getCart() {
+    const cart = localStorage.getItem(CART_STORAGE_KEY);
+    return cart ? JSON.parse(cart) : [];
+}
+
+// Guardar el carrito en localStorage
+function saveCart(cart) {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+}
+
+// Añadir producto al carrito
+function addToCart(product) {
+    let cart = getCart();
+    const existingProductIndex = cart.findIndex(item => item.id === product.id);
+
+    if (existingProductIndex > -1) {
+        cart[existingProductIndex].quantity += product.quantity;
+    } else {
+        cart.push(product);
+    }
+
+    saveCart(cart);
+}
+
+// Eliminar producto del carrito
+function removeFromCart(productId) {
+    let cart = getCart();
+    cart = cart.filter(item => item.id !== productId);
+    saveCart(cart);
+}
+
+// Actualizar cantidad de un producto en el carrito
+function updateQuantity(productId, delta) {
+    let cart = getCart();
+    const productIndex = cart.findIndex(item => item.id === productId);
+
+    if (productIndex > -1) {
+        cart[productIndex].quantity += delta;
+        if (cart[productIndex].quantity <= 0) {
+            cart.splice(productIndex, 1);
+        }
+        saveCart(cart);
+    }
+}
+
+// Calcular el precio total
+function calculateTotal() {
+    const cart = getCart();
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+}
+

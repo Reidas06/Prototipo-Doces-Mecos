@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doces&Mecos</title>
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Descripcion.css">
+</head>
+
+<body>
+    <header class="cabecera">
+        <div class="cabecera-left">
+            <a href="/Definitiva/Principal.html"><img src="Logo.jpg" alt="Logo" class="logo"></a>
+        </div>
+        <div class="cabecera-center">
+            <h1>Doces&Mecos</h1>
+            <p>Doce alegría en cada bocado!</p>
+        </div>
+        <div class="cabecera-right">
+            <div class="hamburger-menu">
+                <input type="checkbox" id="menu" class="menu-checkbox">
+                <label for="menu" class="hamburger">
+                    <i class="fa-solid fa-bars"></i>
+                </label>
+                <ul class="desplegable">
+                    <li><a href="Principal.html">Inicio</a></li>
+                    <li><a href="#">Noticias</a></li>
+                    <li><a href="Productos.html">Productos</a></li>
+                    <li><a href="#">Contacta</a></li>
+                </ul>
+            </div>
+            <div class="cabecera-icons">
+                <a href="Carrito.html" class="icon-link"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="Formulario.html" class="icon-link"><i class="fa-solid fa-user"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="principal">
+        <div class="form-principal">
+            <div class="producto-detalle-img">
+                <img src="sea-9983074_640.jpg" alt="Bolsa de patatas RealBites">
+            </div>
+
+            <div class="producto-descripcion">
+                <h3>Bolsa de patatas RealBites</h3>
+                <p>Peso: 45 g</p>
+                <p>Valor enerxético: 210 kcal por porción (30 g)</p>
+                <p>Ingredientes principais: harina de lenteja, patata deshidratada, aceite vegetal, sal y especias
+                    naturales.</p>
+                <p>Sin gluten</p>
+                <p>Apto para vegetarianos</p>
+            </div>
+
+            <div class="compra-controles">
+                <div class="selector-cantidad">
+                    <button class="qty-btn" id="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                    <span class="cant-box" id="product-qty">1</span>
+                    <button class="qty-btn" id="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                </div>
+
+                <button type="button" class="boton-pago" id="add-to-cart-btn">Añadir al carrito</button>
+            </div>
+            <script src="cart.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const minusBtn = document.getElementById('minus-btn');
+                    const plusBtn = document.getElementById('plus-btn');
+                    const qtyDisplay = document.getElementById('product-qty');
+                    const addToCartBtn = document.getElementById('add-to-cart-btn');
+
+                    let quantity = 1;
+
+                    minusBtn.addEventListener('click', () => {
+                        if (quantity > 1) {
+                            quantity--;
+                            qtyDisplay.textContent = quantity;
+                        }
+                    });
+
+                    plusBtn.addEventListener('click', () => {
+                        quantity++;
+                        qtyDisplay.textContent = quantity;
+                    });
+
+                    addToCartBtn.addEventListener('click', () => {
+                        const product = {
+                            id: 'bolsa-patatas-realbites', // ID único para este producto
+                            name: document.querySelector('.producto-descripcion h3').textContent,
+                            price: 2.50, // Precio por defecto para el prototipo
+                            image: 'sea-9983074_640.jpg',
+                            quantity: quantity
+                        };
+                        addToCart(product);
+                        alert('Producto engadido ao carriño!');
+                    });
+                });
+            </script>
+        </div>
+    </main>
+
+    <footer class="pie">
+        <div class="pie-left">
+            <img src="Logo.jpg" alt="Logo" class="logo">
+            <p>Política e privacidade da empresa</p>
+            <p>Rúa Eduardo Vila Fano 2</p>
+            <p>Malpica de Bergantiños</p>
+        </div>
+        <div class="pie-right">
+            <a href="https://www.instagram.com/doces_e_mecos/?hl=es">
+                <p>@doces_e_mecos</p>
+            </a>
+            <p><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">CC BY-NC-ND 4.0</font>
+                    </font>
+                </a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/nd.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"></p>
+        </div>
+    </footer>
+</body>
+
+</html>

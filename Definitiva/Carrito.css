@@ -1,0 +1,370 @@
+/*Cabecera*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: lightblue;
+    border-bottom: 2px solid lightblue;
+    padding: 15px 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+}
+
+.cabecera-left .logo {
+    height: 50px;
+    width: auto;
+}
+
+.cabecera-center {
+    text-align: center;
+}
+
+.cabecera-center h1 {
+    font-size: 28px;
+    color: black;
+    margin: 0;
+}
+
+.cabecera-center p {
+    font-size: 14px;
+    color: white;
+    margin: 4px 0 0 0;
+}
+
+.cabecera-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/*Damos primeiro os estilos aos enlaces para que non apareza o menu desplegado o abrir a pagina*/
+.desplegable a {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+}
+
+.desplegable a:hover {
+    background-color: lightpink;
+    color: white;
+}
+
+.menu-checkbox {
+    display: none;
+}
+
+.hamburger-menu {
+    position: relative;
+}
+
+.hamburger {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: black;
+    padding: 8px;
+}
+
+.hamburger:hover {
+    background-color: gray;
+}
+
+.desplegable {
+    display: none;
+    list-style: none;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    width: 150px;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 2000;
+}
+
+.menu-checkbox:checked ~ .desplegable {
+    display: block;
+}
+
+.desplegable li {
+    border-bottom: 1px solid whitesmoke;
+}
+
+.desplegable li:last-child {
+    border-bottom: none;
+}
+
+
+.cabecera-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-link {
+    font-size: 20px;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.icon-link:hover {
+    background-color: gray;
+}
+
+/*Cuerpo*/
+.principal {
+    padding: 80px 10%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.form-principal {
+    background: white;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 700px;
+}
+
+.form-avatar {
+    text-align: center;
+    font-size: 60px;
+    color: black;
+    margin-bottom: 20px;
+}
+
+.form-principal h2 {
+    text-align: center;
+    font-size: 24px;
+    color: black;
+    margin-bottom: 40px;
+}
+
+/* Lista de Productos del Carrito */
+.carrito-contenedor {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.producto-fila {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    border: 1px solid gainsboro;
+    border-radius: 50px;
+    background-color: whitesmoke;
+    justify-content: space-between;
+}
+
+.producto-img-box img {
+    height: 55px;
+    width: auto;
+    display: block;
+}
+
+.producto-detalles {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-grow: 1;
+    margin-left: 15px;
+}
+
+.cant-box {
+    border: 1px solid gray;
+    padding: 5px 12px;
+    background: white;
+    font-weight: bold;
+    min-width: 35px;
+    text-align: center;
+}
+
+.qty-btn {
+    background: white;
+    border: 1px solid gray;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.qty-btn:hover {
+    background: #e0e0e0;
+}
+
+.icono-operacion {
+    color: black;
+    font-size: 1rem;
+}
+
+.borrar-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: gray;
+    transition: color 0.2s;
+}
+
+.borrar-btn:hover {
+    color: rgb(255, 95, 161);
+}
+
+/*Pie de página*/
+.pie {
+    background-color: lightpink;
+    border-top: 1px solid whitesmoke;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.pie-right {
+    text-align: right;
+}
+
+.pie-right p {
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+}
+
+.pie-left .logo {
+    height: 40px;
+    width: auto;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.pie-left p {
+    margin: 6px 0;
+    font-size: 18px;
+    color: black;
+    line-height: 1.4;
+}
+
+/*Responsive para tablets*/
+@media (max-width: 768px) {
+    .cabecera {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .cabecera-left {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .cabecera-right {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+    }
+
+    .cabecera-center {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+        padding-top: 5px;
+    }
+
+    .cabecera-center h1 {
+        font-size: 24px;
+    }
+
+    .principal {
+        padding: 40px 15px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-principal {
+        padding: 30px 15px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .carrito-resumen-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .pie-left p{
+        font-size: 16px;
+    }
+
+    .pie-right p {
+        font-size: 16px;
+    }
+}
+
+/*Responsive para moviles*/
+@media (max-width: 576px) {
+    .cabecera-center h1 {
+        font-size: 20px;
+    }
+
+    .cabecera-left .logo {
+        height: 40px;
+    }
+
+    .producto-fila {
+        flex-direction: column;
+        border-radius: 20px;
+        padding: 20px;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .producto-detalles {
+        flex-direction: column;
+        margin-left: 0;
+        gap: 8px;
+    }
+
+    .producto-img-box img {
+        height: 70px;
+    }
+
+    .borrar-btn {
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    .pie-left p{
+        font-size: 12px;
+    }
+
+    .pie-right p {
+        font-size: 12px;
+    }
+}
