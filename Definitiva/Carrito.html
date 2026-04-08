@@ -59,7 +59,7 @@
                     <p>Para relizar o pago prema o botón que se atopa a esquerda</p>
                 </div>
             </div>
-            <script src="cart.js"></script>
+            <script src="carrito.js"></script>
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
                     const cartContainer = document.getElementById('cart-items');
@@ -113,10 +113,7 @@
                         if (cart.length === 0) {
                             alert('O carriño está valeiro!');
                         } else {
-                            alert('Grazas pola túa compra! Procedendo ao pago...');
-                            // Aquí normalmente se redirigiría a una pasarela de pago
-                            localStorage.removeItem('doces_e_mecos_cart');
-                            renderCart();
+                            window.location.href = 'Pago.html';
                         }
                     });
 

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doces&Mecos - Pago</title>
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Pago.css">
+</head>
+
+<body>
+    <header class="cabecera">
+        <div class="cabecera-left">
+            <a href="Principal.html"><img src="Logo.jpg" alt="Logo" class="logo"></a>
+        </div>
+        <div class="cabecera-center">
+            <h1>Doces&Mecos</h1>
+            <p>Doce alegría en cada bocado!</p>
+        </div>
+        <div class="cabecera-right">
+            <div class="hamburger-menu">
+                <input type="checkbox" id="menu" class="menu-checkbox">
+                <label for="menu" class="hamburger">
+                    <i class="fa-solid fa-bars"></i>
+                </label>
+                <ul class="desplegable">
+                    <li><a href="Principal.html">Inicio</a></li>
+                    <li><a href="#">Noticias</a></li>
+                    <li><a href="Productos.html">Productos</a></li>
+                    <li><a href="#">Contacta</a></li>
+                </ul>
+            </div>
+            <div class="cabecera-icons">
+                <a href="Carrito.html" class="icon-link"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="Formulario.html" class="icon-link"><i class="fa-solid fa-user"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="principal">
+        <div class="pago-contenedor">
+            <div class="pago-header">
+                <i class="fa-solid fa-credit-card"></i>
+                <h2>Realizar Pago</h2>
+            </div>
+            
+            <div class="pago-grid">
+                <div class="pago-resumen">
+                    <h3>O teu pedido</h3>
+                    <div id="pago-cart-items" class="pago-cart-items">
+                        <!-- Los productos se cargarán aquí -->
+                    </div>
+                    <div class="pago-total">
+                        <span>Total:</span>
+                        <span id="pago-total-amount">0,00€</span>
+                    </div>
+                </div>
+
+                <form id="formulario-pago" class="formulario-pago">
+                    <div class="form-section">
+                        <h3><i class="fa-solid fa-truck"></i> Datos de envío</h3>
+                        <div class="form-group">
+                            <label for="nombre">Nome e Apelidos</label>
+                            <input type="text" id="nombre" name="nombre" required placeholder="Ex. María Pérez">
+                        </div>
+                        <div class="form-group">
+                            <label for="direccion">Enderezo</label>
+                            <input type="text" id="direccion" name="direccion" required placeholder="Ex. Rúa Principal, 15">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ciudad">Localidade</label>
+                                <input type="text" id="ciudad" name="ciudad" required placeholder="Ex. Malpica">
+                            </div>
+                            <div class="form-group">
+                                <label for="cp">C.P.</label>
+                                <input type="text" id="cp" name="cp" required placeholder="15113" maxlength="5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fa-regular fa-credit-card"></i> Datos da tarxeta</h3>
+                        <div class="form-group">
+                            <label for="titular">Titular da tarxeta</label>
+                            <input type="text" id="titular" name="titular" required placeholder="Nome no cartón">
+                        </div>
+                        <div class="form-group">
+                            <label for="tarjeta">Número da tarxeta</label>
+                            <input type="text" id="tarjeta" name="tarjeta" required placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="caducidad">Caducidade</label>
+                                <input type="text" id="caducidad" name="caducidad" required placeholder="MM/AA" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" required placeholder="123" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="boton-pagar">Pagar Agora</button>
+                </form>
+            </div>
+            
+            <div id="pago-mensaje" class="pago-mensaje" style="display: none;">
+                <!-- Mensaje de éxito -->
+            </div>
+        </div>
+
+        <script src="carrito.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const cart = getCart();
+                const itemsContainer = document.getElementById('pago-cart-items');
+                const totalAmountDisplay = document.getElementById('pago-total-amount');
+
+                if (cart.length === 0) {
+                    window.location.href = 'Carrito.html'; // Volver al carrito si está vacío
+                    return;
+                }
+
+                // Cargar resumen de carrito
+                cart.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'resumen-item';
+                    itemDiv.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="resumen-detalle">
+                            <p class="resumen-nombre">${item.name}</p>
+                            <p class="resumen-cant">Cantidade: ${item.quantity}</p>
+                        </div>
+                        <div class="resumen-precio">${(item.price * item.quantity).toFixed(2).replace('.', ',')}€</div>
+                    `;
+                    itemsContainer.appendChild(itemDiv);
+                });
+
+                const total = calculateTotal();
+                totalAmountDisplay.textContent = \`\${total.toFixed(2).replace('.', ',')}€\`;
+
+                // Procesar pago (simulación)
+                const form = document.getElementById('formulario-pago');
+                const mensaje = document.getElementById('pago-mensaje');
+                const formGrid = document.querySelector('.pago-grid');
+                const header = document.querySelector('.pago-header h2');
+                const headerIcon = document.querySelector('.pago-header i');
+                
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    formGrid.style.display = 'none';
+                    header.style.display = 'none';
+                    headerIcon.style.display = 'none';
+
+                    mensaje.style.display = 'block';
+                    mensaje.innerHTML = `
+                        <div class="mensaje-exito">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <h3>Pago realizado con éxito</h3>
+                            <p>Grazas pola túa compra! O teu pedido está procesándose e enviarémolo axiña á túa morada.</p>
+                            <a href="Principal.html" class="boton-volver">Volver ao inicio</a>
+                        </div>
+                    `;
+
+                    // Vaciar carrito
+                    localStorage.removeItem('doces_e_mecos_cart');
+                });
+            });
+        </script>
+    </main>
+
+    <footer class="pie">
+        <div class="pie-left">
+            <img src="Logo.jpg" alt="Logo" class="logo">
+            <p>Política e privacidade da empresa</p>
+            <p>Rúa Eduardo Vila Fano 2</p>
+            <p>Malpica de Bergantiños</p>
+        </div>
+        <div class="pie-right">
+            <a href="https://www.instagram.com/doces_e_mecos/?hl=es">
+                <p>@doces_e_mecos</p>
+            </a>
+            <p><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">CC BY-NC-ND 4.0</font>
+                    </font>
+                </a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/nd.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"></p>
+        </div>
+    </footer>
+</body>
+</html>
