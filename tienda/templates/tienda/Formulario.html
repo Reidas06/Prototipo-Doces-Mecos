@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -6,13 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doces&Mecos - Formulario</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="Formulario.css">
+    <link rel="stylesheet" href="{% static 'tienda/css/Formulario.css' %}">
 </head>
 
 <body>
     <header class="cabecera">
         <div class="cabecera-left">
-            <a href="/Definitiva/Principal.html"><img src="Logo.jpg" alt="Logo" class="logo"></a>
+            <a href="{% url 'inicio' %}"><img src="{% static 'tienda/img/Logo.jpg' %}" alt="Logo" class="logo"></a>
         </div>
         <div class="cabecera-center">
             <h1>Doces&Mecos</h1>
@@ -25,15 +26,15 @@
                     <i class="fa-solid fa-bars"></i>
                 </label>
                 <ul class="desplegable">
-                    <li><a href="Principal.html">Inicio</a></li>
+                    <li><a href="{% url 'inicio' %}">Inicio</a></li>
                     <li><a href="#">Noticias</a></li>
-                    <li><a href="Productos.html">Productos</a></li>
+                    <li><a href="{% url 'productos' %}">Productos</a></li>
                     <li><a href="#">Contacta</a></li>
                 </ul>
             </div>
             <div class="cabecera-icons">
-                <a href="Carrito.html" class="icon-link"><i class="fa-solid fa-cart-shopping"></i></a>
-                <a href="Formulario.html" class="icon-link"><i class="fa-solid fa-user"></i></a>
+                <a href="{% url 'carrito' %}" class="icon-link"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="{% url 'formulario' %}" class="icon-link"><i class="fa-solid fa-user"></i></a>
             </div>
         </div>
     </header>
@@ -93,7 +94,7 @@
 
     <footer class="pie">
         <div class="pie-left">
-            <img src="Logo.jpg" alt="Logo" class="logo">
+            <img src="{% static 'tienda/img/Logo.jpg' %}" alt="Logo" class="logo">
             <p>Política e privacidade da empresa</p>
             <p>Rúa Eduardo Vila Fano 2</p>
             <p>Malpica de Bergantiños</p>

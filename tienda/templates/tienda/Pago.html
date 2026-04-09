@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -8,13 +9,13 @@
 
     <!-- FONT AWESOME -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="Pago.css">
+    <link rel="stylesheet" href="{% static 'tienda/css/Pago.css' %}">
 </head>
 
 <body>
     <header class="cabecera">
         <div class="cabecera-left">
-            <a href="Principal.html"><img src="Logo.jpg" alt="Logo" class="logo"></a>
+            <a href="{% url 'inicio' %}"><img src="{% static 'tienda/img/Logo.jpg' %}" alt="Logo" class="logo"></a>
         </div>
         <div class="cabecera-center">
             <h1>Doces&Mecos</h1>
@@ -27,15 +28,15 @@
                     <i class="fa-solid fa-bars"></i>
                 </label>
                 <ul class="desplegable">
-                    <li><a href="Principal.html">Inicio</a></li>
+                    <li><a href="{% url 'inicio' %}">Inicio</a></li>
                     <li><a href="#">Noticias</a></li>
-                    <li><a href="Productos.html">Productos</a></li>
+                    <li><a href="{% url 'productos' %}">Productos</a></li>
                     <li><a href="#">Contacta</a></li>
                 </ul>
             </div>
             <div class="cabecera-icons">
-                <a href="Carrito.html" class="icon-link"><i class="fa-solid fa-cart-shopping"></i></a>
-                <a href="Formulario.html" class="icon-link"><i class="fa-solid fa-user"></i></a>
+                <a href="{% url 'carrito' %}" class="icon-link"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="{% url 'formulario' %}" class="icon-link"><i class="fa-solid fa-user"></i></a>
             </div>
         </div>
     </header>
@@ -113,7 +114,7 @@
             </div>
         </div>
 
-        <script src="carrito.js"></script>
+        <script src="{% static 'tienda/js/carrito.js' %}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const cart = getCart();
@@ -163,7 +164,7 @@
                             <i class="fa-solid fa-circle-check"></i>
                             <h3>Pago realizado con éxito</h3>
                             <p>Grazas pola túa compra! O teu pedido está procesándose e enviarémolo axiña á túa morada.</p>
-                            <a href="Principal.html" class="boton-volver">Volver ao inicio</a>
+                            <a href="{% url 'inicio' %}" class="boton-volver">Volver ao inicio</a>
                         </div>
                     `;
 
@@ -176,7 +177,7 @@
 
     <footer class="pie">
         <div class="pie-left">
-            <img src="Logo.jpg" alt="Logo" class="logo">
+            <img src="{% static 'tienda/img/Logo.jpg' %}" alt="Logo" class="logo">
             <p>Política e privacidade da empresa</p>
             <p>Rúa Eduardo Vila Fano 2</p>
             <p>Malpica de Bergantiños</p>
