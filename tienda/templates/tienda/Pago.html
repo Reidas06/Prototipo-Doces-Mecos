@@ -122,7 +122,7 @@
                 const totalAmountDisplay = document.getElementById('pago-total-amount');
 
                 if (cart.length === 0) {
-                    window.location.href = 'Carrito.html'; // Volver al carrito si está vacío
+                    window.location.href = '{% url "carrito" %}'; // Volver al carrito si está vacío
                     return;
                 }
 
@@ -131,7 +131,7 @@
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'resumen-item';
                     itemDiv.innerHTML = `
-                        <img src="${item.image}" alt="${item.name}">
+                        <img src="{% static 'tienda/img/' %}${item.image}" alt="${item.name}">
                         <div class="resumen-detalle">
                             <p class="resumen-nombre">${item.name}</p>
                             <p class="resumen-cant">Cantidade: ${item.quantity}</p>

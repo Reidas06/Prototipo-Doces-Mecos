@@ -82,7 +82,7 @@
                             productRow.className = 'producto-fila';
                             productRow.innerHTML = `
                                 <div class="producto-img-box">
-                                    <img src="${item.image}" alt="${item.name}">
+                                    <img src="{% static 'tienda/img/' %}${item.image}" alt="${item.name}">
                                 </div>
                                 <div class="producto-detalles">
                                     <button class="qty-btn" onclick="changeQty('${item.id}', -1)"><i class="fa-solid fa-minus"></i></button>
@@ -114,7 +114,7 @@
                         if (cart.length === 0) {
                             alert('O carriño está valeiro!');
                         } else {
-                            window.location.href = 'Pago.html';
+                            window.location.href = '{% url "pago" %}';
                         }
                     });
 
