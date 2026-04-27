@@ -153,6 +153,11 @@ body {
     align-items: center;
 }
 
+.grid-productos a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .producto-item {
     width: 100%;
     display: flex;
