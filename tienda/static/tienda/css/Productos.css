@@ -272,3 +272,41 @@ body {
         font-size: 12px;
     }
 }
+
+/* Buscador */
+.buscador-contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: -20px; /* Reducir el espacio inferior */
+}
+
+#buscador-input {
+    width: 60%;
+    max-width: 500px;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid lightpink;
+    border-radius: 20px 0 0 20px;
+    outline: none;
+}
+
+#buscador-input:focus {
+    border-color: hotpink;
+}
+
+#btn-buscar {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: lightpink;
+    color: white;
+    border: 2px solid lightpink;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#btn-buscar:hover {
+    background-color: hotpink;
+    border-color: hotpink;
+}
