@@ -226,6 +226,15 @@ body {
     text-align: right;
 }
 
+.instagram-link {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .pie-right p {
     text-decoration: none;
     font-size: 18px;
