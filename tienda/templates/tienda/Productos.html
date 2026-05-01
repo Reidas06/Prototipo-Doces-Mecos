@@ -52,90 +52,54 @@
         <section class="seccion-productos">
             <h2>Ofertas</h2>
             <div class="grid-productos">
+                {% for producto in ofertas %}
                 <a href="{% url 'descripcion' %}">
                     <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Caramelos clásicos</h3>
+                        {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}">
+                        {% else %}
+                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}">
+                        {% endif %}
+                        <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                     </div>
                 </a>
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Nubes rosas</h3>
-                    </div>
-                </a>
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Regaliz negro</h3>
-                    </div>
-                </a>
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Piruleta corazón</h3>
-                    </div>
-                </a>
+                {% endfor %}
             </div>
         </section>
 
         <section class="seccion-productos">
             <h2>Lo mas vendido</h2>
             <div class="grid-productos">
+                {% for producto in vendidos %}
                 <a href="{% url 'descripcion' %}">
                     <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Chicles de melón</h3>
+                        {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}">
+                        {% else %}
+                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}">
+                        {% endif %}
+                        <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                     </div>
                 </a>
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Ositos de goma</h3>
-                    </div>
-                </a>
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Lacasitos</h3>
-                    </div>
-                </a>
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Gusanitos</h3>
-                    </div>
-                </a>
+                {% endfor %}
             </div>
         </section>
 
         <section class="seccion-productos">
             <h2>Por tiempo limitado</h2>
             <div class="grid-productos">
+                {% for producto in limitado %}
                 <a href="{% url 'descripcion' %}">
                     <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Turrón chocolate</h3>
+                        {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}">
+                        {% else %}
+                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}">
+                        {% endif %}
+                        <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                     </div>
                 </a>
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Polvorones</h3>
-                    </div>
-                </a>
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Carbón dulce</h3>
-                    </div>
-                </a>
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Producto">
-                        <h3 class="producto-nombre">Huevos Kinder</h3>
-                    </div>
-                </a>
+                {% endfor %}
             </div>
         </section>
     </main>
