@@ -43,65 +43,166 @@
     </header>
 
     <main class="principal-catalogo">
-        <!-- BUSCADOR -->
         <div class="buscador-contenedor">
             <input type="text" id="buscador-input" placeholder="Buscar productos por nombre...">
             <button id="btn-buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
 
-        <section class="seccion-productos">
-            <h2>Ofertas</h2>
-            <div class="grid-productos">
-                {% for producto in ofertas %}
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        {% if producto.imagen %}
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}">
-                        {% else %}
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}">
-                        {% endif %}
-                        <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+        <div class="admin-actions" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
+            <button class="btn-add-news" id="btn-add-news"><i class="fas fa-plus"></i> <span>Añadir Producto</span></button>
+            <button class="btn-add-news" id="btn-trash-view" style="background-color: #e74c3c;"><i class="fas fa-trash"></i> <span>Papelera</span></button>
+        </div>
+
+        <!-- Modal para añadir producto (Estilo Arrivelo) -->
+        <div class="modal-overlay" id="add-news-modal">
+            <div class="modal-content">
+                <button class="modal-close" id="btn-close-modal">&times;</button>
+                <h2 class="modal-title">Añadir nuevo producto</h2>
+                <form id="add-news-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="n-titulo">Título del producto</label>
+                        <input type="text" id="n-titulo" name="titulo" required placeholder="Ej: Caramelos de fresa">
                     </div>
-                </a>
-                {% endfor %}
+                    <div class="form-group">
+                        <label for="n-imagen">Imagen del producto</label>
+                        <input type="file" id="n-imagen" name="imagen" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="n-descripcion">Descripción</label>
+                        <textarea id="n-descripcion" name="descripcion" placeholder="Resumen del producto..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="n-categoria">Categoría</label>
+                        <select id="n-categoria" name="categoria">
+                            <option value="ninguna">Ninguna (solo en Todos)</option>
+                            <option value="ofertas">Ofertas</option>
+                            <option value="vendido">Lo más vendido</option>
+                            <option value="limitado">Por tiempo limitado</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-add-news" style="width:100%;">Guardar Producto</button>
+                </form>
             </div>
+        </div>
+
+        <!-- Modal para editar producto (Estilo Arrivelo) -->
+        <div class="modal-overlay" id="edit-news-modal">
+            <div class="modal-content">
+                <button class="modal-close" id="btn-close-edit">&times;</button>
+                <h2 class="modal-title">Editar producto</h2>
+                <form id="edit-news-form">
+                    {% csrf_token %}
+                    <input type="hidden" id="e-id">
+                    <div class="form-group">
+                        <label for="e-titulo">Título del producto</label>
+                        <input type="text" id="e-titulo" name="titulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="e-imagen">Cambiar imagen (Opcional)</label>
+                        <input type="file" id="e-imagen" name="imagen" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="e-descripcion">Descripción</label>
+                        <textarea id="e-descripcion" name="descripcion"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="e-categoria">Categoría</label>
+                        <select id="e-categoria" name="categoria">
+                            <option value="ninguna">Ninguna</option>
+                            <option value="ofertas">Ofertas</option>
+                            <option value="vendido">Lo más vendido</option>
+                            <option value="limitado">Por tiempo limitado</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-add-news" style="width:100%;">Actualizar Producto</button>
+                </form>
+            </div>
+        </div>
+
         </section>
 
-        <section class="seccion-productos">
-            <h2>Lo mas vendido</h2>
-            <div class="grid-productos">
-                {% for producto in vendidos %}
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        {% if producto.imagen %}
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}">
-                        {% else %}
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}">
-                        {% endif %}
-                        <h3 class="producto-nombre">{{ producto.titulo }}</h3>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-        </section>
+        <!-- Contenedor para la papelera (Estilo Arrivelo) -->
+        <div id="trash-grid" class="grid-productos" style="display: none; grid-template-columns: repeat(4, 1fr); gap: 30px; width: 100%; justify-items: center; align-items: center;">
+            <!-- Se cargará dinámicamente -->
+        </div>
 
-        <section class="seccion-productos">
-            <h2>Por tiempo limitado</h2>
-            <div class="grid-productos">
-                {% for producto in limitado %}
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item">
-                        {% if producto.imagen %}
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}">
-                        {% else %}
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}">
-                        {% endif %}
-                        <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+        <div id="categorias-productos">
+            <!-- Envuelve las categorías para poder ocultarlas todas a la vez -->
+            <section class="seccion-productos">
+                <h2>Ofertas</h2>
+                <div class="grid-productos">
+                    {% for producto in ofertas %}
+                    <div class="producto-item" data-id="{{ producto.id }}" data-titulo="{{ producto.titulo }}" data-descripcion="{{ producto.descripcion|default:'' }}" data-categoria="{{ producto.categoria }}">
+                        <a href="{% url 'descripcion' %}" class="producto-enlace">
+                            {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}" class="producto-img-main">
+                            {% else %}
+                            <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
+                            {% endif %}
+                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+                        </a>
+                        <!-- Botones de gestión rápida -->
+                        <div class="producto-admin-btns">
+                            <button class="btn-edit-item" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn-delete-item" title="Enviar a papelera"><i class="fas fa-trash"></i></button>
+                        </div>
                     </div>
-                </a>
-                {% endfor %}
-            </div>
-        </section>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="seccion-productos">
+                <h2>Lo mas vendido</h2>
+                <div class="grid-productos">
+                    {% for producto in vendidos %}
+                    <div class="producto-item" data-id="{{ producto.id }}" data-titulo="{{ producto.titulo }}" data-descripcion="{{ producto.descripcion|default:'' }}" data-categoria="{{ producto.categoria }}">
+                        <a href="{% url 'descripcion' %}" class="producto-enlace">
+                            {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}" class="producto-img-main">
+                            {% else %}
+                            <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
+                            {% endif %}
+                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+                        </a>
+                        <!-- Botones de gestión rápida -->
+                        <div class="producto-admin-btns">
+                            <button class="btn-edit-item" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn-delete-item" title="Enviar a papelera"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="seccion-productos">
+                <h2>Por tiempo limitado</h2>
+                <div class="grid-productos">
+                    {% for producto in limitado %}
+                    <div class="producto-item" data-id="{{ producto.id }}" data-titulo="{{ producto.titulo }}" data-descripcion="{{ producto.descripcion|default:'' }}" data-categoria="{{ producto.categoria }}">
+                        <a href="{% url 'descripcion' %}" class="producto-enlace">
+                            {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}" class="producto-img-main">
+                            {% else %}
+                            <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
+                            {% endif %}
+                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+                        </a>
+                        <!-- Botones de gestión rápida -->
+                        <div class="producto-admin-btns">
+                            <button class="btn-edit-item" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn-delete-item" title="Enviar a papelera"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+
+        <!-- BOTÓN VER TODOS LOS PRODUCTOS -->
+        <div class="ver-todos-contenedor">
+            <a href="{% url 'todos_productos' %}" class="btn-ver-todos">Ver todos los productos</a>
+        </div>
     </main>
 
     <footer class="pie">
@@ -130,6 +231,7 @@
         </div>
     </footer>
     <script src="{% static 'tienda/js/buscador.js' %}"></script>
+    <script src="{% static 'tienda/js/gestion_productos.js' %}"></script>
 </body>
 
 </html>
