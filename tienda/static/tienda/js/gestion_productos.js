@@ -79,16 +79,23 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
 
-            const formData = new FormData(formAdd);
-            const res = await fetch('/api/producto/crear/', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await res.json();
-            if (data.status === 'ok') {
-                window.location.reload();
-            } else {
-                alert("Error al crear producto.");
+            try {
+                const formData = new FormData(formAdd);
+                const res = await fetch('/api/producto/crear/', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!res.ok) throw new Error('Error en la respuesta del servidor');
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    window.location.reload();
+                } else {
+                    alert("Error al crear producto: " + (data.error || "Desconocido"));
+                }
+            } catch (error) {
+                console.error("Error en la petición:", error);
+                alert("Hubo un fallo de conexión o error del servidor.");
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             }
@@ -105,17 +112,24 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
 
-            const formData = new FormData(formEdit);
-            const res = await fetch(`/api/producto/editar/${id}/`, {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-CSRFToken': getCookie('csrftoken') }
-            });
-            const data = await res.json();
-            if (data.status === 'ok') {
-                window.location.reload();
-            } else {
-                alert("Error al actualizar producto.");
+            try {
+                const formData = new FormData(formEdit);
+                const res = await fetch(`/api/producto/editar/${id}/`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                });
+                if (!res.ok) throw new Error('Error en la respuesta del servidor');
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    window.location.reload();
+                } else {
+                    alert("Error al actualizar producto: " + (data.error || "Desconocido"));
+                }
+            } catch (error) {
+                console.error("Error en la petición:", error);
+                alert("Hubo un fallo de conexión o error del servidor.");
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             }
@@ -126,14 +140,22 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-delete-item').forEach(btn => {
         btn.addEventListener('click', async () => {
             if (confirm("¿Enviar este producto a la papelera?")) {
-                const id = btn.closest('.producto-item').getAttribute('data-id');
-                const res = await fetch(`/api/producto/delete/${id}/`, {
-                    method: 'POST',
-                    headers: { 'X-CSRFToken': getCookie('csrftoken') }
-                });
-                const data = await res.json();
-                if (data.success) {
-                    window.location.reload();
+                try {
+                    const id = btn.closest('.producto-item').getAttribute('data-id');
+                    const res = await fetch(`/api/producto/delete/${id}/`, {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                    });
+                    if (!res.ok) throw new Error('Error en la respuesta del servidor');
+                    const data = await res.json();
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert("No se pudo mover a la papelera.");
+                    }
+                } catch (error) {
+                    console.error("Error al borrar:", error);
+                    alert("Fallo al conectar con el servidor.");
                 }
             }
         });
@@ -176,13 +198,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Listeners Restaurar
                         document.querySelectorAll('.btn-restore').forEach(b => {
                             b.addEventListener('click', async () => {
-                                const id = b.getAttribute('data-id');
-                                const r = await fetch(`/api/producto/restore/${id}/`, {
-                                    method: 'POST',
-                                    headers: { 'X-CSRFToken': getCookie('csrftoken') }
-                                });
-                                const d = await r.json();
-                                if (d.success) window.location.reload();
+                                try {
+                                    const id = b.getAttribute('data-id');
+                                    const r = await fetch(`/api/producto/restore/${id}/`, {
+                                        method: 'POST',
+                                        headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                                    });
+                                    if (!r.ok) throw new Error('Server error');
+                                    const d = await r.json();
+                                    if (d.success) {
+                                        window.location.reload();
+                                    } else {
+                                        alert("Error al restaurar.");
+                                    }
+                                } catch (error) {
+                                    alert("No se pudo restaurar el producto.");
+                                }
                             });
                         });
                         
@@ -190,13 +221,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.querySelectorAll('.btn-hard-delete').forEach(b => {
                             b.addEventListener('click', async () => {
                                 if (confirm("¡ATENCIÓN! El producto se eliminará para siempre. ¿Continuar?")) {
-                                    const id = b.getAttribute('data-id');
-                                    const r = await fetch(`/api/producto/hard_delete/${id}/`, {
-                                        method: 'POST',
-                                        headers: { 'X-CSRFToken': getCookie('csrftoken') }
-                                    });
-                                    const d = await r.json();
-                                    if (d.success) window.location.reload();
+                                    try {
+                                        const id = b.getAttribute('data-id');
+                                        const r = await fetch(`/api/producto/hard_delete/${id}/`, {
+                                            method: 'POST',
+                                            headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                                        });
+                                        if (!r.ok) throw new Error('Server error');
+                                        const d = await r.json();
+                                        if (d.success) {
+                                            window.location.reload();
+                                        } else {
+                                            alert("Error al eliminar permanentemente.");
+                                        }
+                                    } catch (error) {
+                                        alert("No se pudo eliminar el producto.");
+                                    }
                                 }
                             });
                         });
