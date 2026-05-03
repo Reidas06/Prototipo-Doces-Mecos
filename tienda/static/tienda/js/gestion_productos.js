@@ -83,7 +83,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const formData = new FormData(formAdd);
                 const res = await fetch('/api/producto/crear/', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') }
                 });
                 if (!res.ok) throw new Error('Error en la respuesta del servidor');
                 const data = await res.json();
