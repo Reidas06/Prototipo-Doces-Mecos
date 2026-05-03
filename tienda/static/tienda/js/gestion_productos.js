@@ -33,40 +33,121 @@ document.addEventListener('DOMContentLoaded', function () {
         return cookieValue;
     }
 
+    // --- Helper UI (No HTML injection) ---
+    function createProductElement(item, isTrash = false) {
+        const div = document.createElement('div');
+        div.className = 'producto-item';
+        div.dataset.id = item.id;
+        div.dataset.titulo = item.titulo;
+        div.dataset.descripcion = item.descripcion || '';
+        div.dataset.categoria = item.categoria || 'ninguna';
+
+        const img = document.createElement('img');
+        img.src = item.imagen ? item.imagen : '/static/tienda/img/sea-9983074_640.jpg';
+        img.alt = item.titulo;
+        img.className = 'producto-img-main';
+
+        const title = document.createElement('h3');
+        title.className = 'producto-nombre';
+        title.textContent = item.titulo;
+
+        if (isTrash) {
+            const actions = document.createElement('div');
+            actions.className = 'trash-actions';
+
+            const restoreBtn = document.createElement('button');
+            restoreBtn.className = 'btn-restore';
+            restoreBtn.title = 'Restaurar';
+            restoreBtn.innerHTML = '<i class="fas fa-undo"></i>';
+            restoreBtn.dataset.id = item.id;
+
+            const hardDeleteBtn = document.createElement('button');
+            hardDeleteBtn.className = 'btn-hard-delete';
+            hardDeleteBtn.title = 'Eliminar permanentemente';
+            hardDeleteBtn.innerHTML = '<i class="fas fa-radiation"></i>';
+            hardDeleteBtn.dataset.id = item.id;
+
+            actions.appendChild(restoreBtn);
+            actions.appendChild(hardDeleteBtn);
+            
+            div.appendChild(img);
+            div.appendChild(title);
+            div.appendChild(actions);
+        } else {
+            const link = document.createElement('a');
+            link.href = '#'; // URL de descripción
+            link.className = 'producto-enlace';
+            link.appendChild(img);
+            link.appendChild(title);
+
+            const adminBtns = document.createElement('div');
+            adminBtns.className = 'producto-admin-btns';
+
+            const editBtn = document.createElement('button');
+            editBtn.className = 'btn-edit-item';
+            editBtn.title = 'Editar';
+            editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'btn-delete-item';
+            deleteBtn.title = 'Eliminar';
+            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+
+            adminBtns.appendChild(editBtn);
+            adminBtns.appendChild(deleteBtn);
+
+            div.appendChild(link);
+            div.appendChild(adminBtns);
+        }
+
+        return div;
+    }
+
     // --- Modales ---
     if (btnAddProduct) {
         btnAddProduct.addEventListener('click', () => addModal.classList.add('active'));
     }
-    if (btnCloseAdd) {
-        btnCloseAdd.addEventListener('click', () => {
-            addModal.classList.remove('active');
-            formAdd.reset();
+    const closeModals = () => {
+        addModal.classList.remove('active');
+        editModal.classList.remove('active');
+        formAdd.reset();
+        formEdit.reset();
+    };
+    if (btnCloseAdd) btnCloseAdd.addEventListener('click', closeModals);
+    if (btnCloseEdit) btnCloseEdit.addEventListener('click', closeModals);
+
+    // --- Event Delegation (Main Grid) ---
+    if (categoriasGrid) {
+        categoriasGrid.addEventListener('click', async (e) => {
+            const editBtn = e.target.closest('.btn-edit-item');
+            if (editBtn) {
+                const item = editBtn.closest('.producto-item');
+                document.getElementById('e-id').value = item.dataset.id;
+                document.getElementById('e-titulo').value = item.dataset.titulo;
+                document.getElementById('e-descripcion').value = item.dataset.descripcion;
+                document.getElementById('e-categoria').value = item.dataset.categoria;
+                editModal.classList.add('active');
+                return;
+            }
+
+            const deleteBtn = e.target.closest('.btn-delete-item');
+            if (deleteBtn && confirm("¿Enviar este producto a la papelera?")) {
+                const item = deleteBtn.closest('.producto-item');
+                try {
+                    const res = await fetch(`/api/producto/delete/${item.dataset.id}/`, {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                    });
+                    if ((await res.json()).success) {
+                        item.classList.add('fade-out');
+                        setTimeout(() => item.remove(), 300);
+                    }
+                } catch (error) {
+                    alert("Fallo al conectar con el servidor.");
+                }
+            }
         });
     }
-    if (btnCloseEdit) {
-        btnCloseEdit.addEventListener('click', () => {
-            editModal.classList.remove('active');
-            formEdit.reset();
-        });
-    }
-
-    // --- Edición (Populate Modal) ---
-    document.querySelectorAll('.btn-edit-item').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const item = btn.closest('.producto-item');
-            const id = item.getAttribute('data-id');
-            const titulo = item.getAttribute('data-titulo');
-            const desc = item.getAttribute('data-descripcion');
-            const cat = item.getAttribute('data-categoria');
-
-            document.getElementById('e-id').value = id;
-            document.getElementById('e-titulo').value = titulo;
-            document.getElementById('e-descripcion').value = desc;
-            document.getElementById('e-categoria').value = cat;
-
-            editModal.classList.add('active');
-        });
-    });
 
     // --- Peticiones API ---
 
@@ -80,22 +161,25 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
 
             try {
-                const formData = new FormData(formAdd);
                 const res = await fetch('/api/producto/crear/', {
                     method: 'POST',
-                    body: formData,
+                    body: new FormData(formAdd),
                     headers: { 'X-CSRFToken': getCookie('csrftoken') }
                 });
-                if (!res.ok) throw new Error('Error en la respuesta del servidor');
                 const data = await res.json();
                 if (data.status === 'ok') {
-                    window.location.reload();
+                    if (data.producto) {
+                        const grid = categoriasGrid.querySelector('.grid-productos') || categoriasGrid;
+                        grid.prepend(createProductElement(data.producto));
+                    } else {
+                        window.location.reload();
+                    }
+                    closeModals();
                 } else {
-                    alert("Error al crear producto: " + (data.error || "Desconocido"));
+                    alert("Error: " + (data.error || "Desconocido"));
                 }
             } catch (error) {
-                console.error("Error en la petición:", error);
-                alert("Hubo un fallo de conexión o error del servidor.");
+                alert("Error de conexión.");
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
@@ -114,22 +198,27 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
 
             try {
-                const formData = new FormData(formEdit);
                 const res = await fetch(`/api/producto/editar/${id}/`, {
                     method: 'POST',
-                    body: formData,
+                    body: new FormData(formEdit),
                     headers: { 'X-CSRFToken': getCookie('csrftoken') }
                 });
-                if (!res.ok) throw new Error('Error en la respuesta del servidor');
                 const data = await res.json();
                 if (data.status === 'ok') {
-                    window.location.reload();
-                } else {
-                    alert("Error al actualizar producto: " + (data.error || "Desconocido"));
+                    const item = document.querySelector(`.producto-item[data-id="${id}"]`);
+                    if (item) {
+                        item.dataset.titulo = document.getElementById('e-titulo').value;
+                        item.dataset.descripcion = document.getElementById('e-descripcion').value;
+                        item.dataset.categoria = document.getElementById('e-categoria').value;
+                        item.querySelector('.producto-nombre').textContent = item.dataset.titulo;
+                        if (data.producto && data.producto.imagen) {
+                            item.querySelector('.producto-img-main').src = data.producto.imagen;
+                        }
+                    }
+                    closeModals();
                 }
             } catch (error) {
-                console.error("Error en la petición:", error);
-                alert("Hubo un fallo de conexión o error del servidor.");
+                alert("Error de conexión.");
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
@@ -137,120 +226,50 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Soft Delete (Papelera)
-    document.querySelectorAll('.btn-delete-item').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            if (confirm("¿Enviar este producto a la papelera?")) {
-                try {
-                    const id = btn.closest('.producto-item').getAttribute('data-id');
-                    const res = await fetch(`/api/producto/delete/${id}/`, {
-                        method: 'POST',
-                        headers: { 'X-CSRFToken': getCookie('csrftoken') }
-                    });
-                    if (!res.ok) throw new Error('Error en la respuesta del servidor');
-                    const data = await res.json();
-                    if (data.success) {
-                        window.location.reload();
-                    } else {
-                        alert("No se pudo mover a la papelera.");
-                    }
-                } catch (error) {
-                    console.error("Error al borrar:", error);
-                    alert("Fallo al conectar con el servidor.");
-                }
-            }
-        });
-    });
-
-    // --- Papelera View ---
-    if (btnTrashView && trashGrid && categoriasGrid) {
-        btnTrashView.addEventListener('click', async () => {
-            if (categoriasGrid.style.display !== 'none') {
-                // Ir a papelera
-                categoriasGrid.style.display = 'none';
-                trashGrid.style.display = 'grid';
-                btnTrashView.innerHTML = '<i class="fas fa-arrow-left"></i> <span>Volver a Productos</span>';
-                
-                trashGrid.innerHTML = '<p style="grid-column: span 4; text-align: center;">Cargando papelera...</p>';
-                
-                try {
-                    const res = await fetch('/api/producto/trash_list/');
-                    const data = await res.json();
-                    const list = data.results;
-                    
-                    if (list.length === 0) {
-                        trashGrid.innerHTML = '<p style="grid-column: span 4; text-align: center; color: #888;">La papelera está vacía.</p>';
-                    } else {
-                        trashGrid.innerHTML = '';
-                        list.forEach(item => {
-                            const imgUrl = item.imagen ? item.imagen : '/static/tienda/img/sea-9983074_640.jpg';
-                            trashGrid.innerHTML += `
-                                <div class="producto-item">
-                                    <img src="${imgUrl}" alt="${item.titulo}" class="producto-img-main">
-                                    <h3 class="producto-nombre">${item.titulo}</h3>
-                                    <div class="trash-actions">
-                                        <button class="btn-restore" data-id="${item.id}" title="Restaurar"><i class="fas fa-undo"></i></button>
-                                        <button class="btn-hard-delete" data-id="${item.id}" title="Eliminar permanentemente"><i class="fas fa-radiation"></i></button>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        
-                        // Listeners Restaurar
-                        document.querySelectorAll('.btn-restore').forEach(b => {
-                            b.addEventListener('click', async () => {
-                                try {
-                                    const id = b.getAttribute('data-id');
-                                    const r = await fetch(`/api/producto/restore/${id}/`, {
-                                        method: 'POST',
-                                        headers: { 'X-CSRFToken': getCookie('csrftoken') }
-                                    });
-                                    if (!r.ok) throw new Error('Server error');
-                                    const d = await r.json();
-                                    if (d.success) {
-                                        window.location.reload();
-                                    } else {
-                                        alert("Error al restaurar.");
-                                    }
-                                } catch (error) {
-                                    alert("No se pudo restaurar el producto.");
-                                }
-                            });
-                        });
-                        
-                        // Listeners Borrado Permanente
-                        document.querySelectorAll('.btn-hard-delete').forEach(b => {
-                            b.addEventListener('click', async () => {
-                                if (confirm("¡ATENCIÓN! El producto se eliminará para siempre. ¿Continuar?")) {
-                                    try {
-                                        const id = b.getAttribute('data-id');
-                                        const r = await fetch(`/api/producto/hard_delete/${id}/`, {
-                                            method: 'POST',
-                                            headers: { 'X-CSRFToken': getCookie('csrftoken') }
-                                        });
-                                        if (!r.ok) throw new Error('Server error');
-                                        const d = await r.json();
-                                        if (d.success) {
-                                            window.location.reload();
-                                        } else {
-                                            alert("Error al eliminar permanentemente.");
-                                        }
-                                    } catch (error) {
-                                        alert("No se pudo eliminar el producto.");
-                                    }
-                                }
-                            });
-                        });
-                    }
-                } catch (e) {
-                    trashGrid.innerHTML = '<p style="grid-column: span 4; text-align: center;">Error al cargar papelera.</p>';
-                }
+    // --- Papelera ---
+    async function loadTrash() {
+        trashGrid.textContent = 'Cargando papelera...';
+        try {
+            const res = await fetch('/api/producto/trash_list/');
+            const data = await res.json();
+            trashGrid.textContent = '';
+            if (data.results.length === 0) {
+                trashGrid.textContent = 'La papelera está vacía.';
             } else {
-                // Volver
-                categoriasGrid.style.display = 'block';
-                trashGrid.style.display = 'none';
-                btnTrashView.innerHTML = '<i class="fas fa-trash"></i> <span>Papelera</span>';
-                btnTrashView.style.backgroundColor = '#e74c3c';
+                data.results.forEach(item => trashGrid.appendChild(createProductElement(item, true)));
+            }
+        } catch (e) {
+            trashGrid.textContent = 'Error al cargar.';
+        }
+    }
+
+    if (btnTrashView) {
+        btnTrashView.addEventListener('click', () => {
+            const isVisible = categoriasGrid.style.display !== 'none';
+            categoriasGrid.style.display = isVisible ? 'none' : 'block';
+            trashGrid.style.display = isVisible ? 'grid' : 'none';
+            btnTrashView.innerHTML = isVisible ? '<i class="fas fa-arrow-left"></i> <span>Volver</span>' : '<i class="fas fa-trash"></i> <span>Papelera</span>';
+            if (isVisible) loadTrash();
+        });
+    }
+
+    if (trashGrid) {
+        trashGrid.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.btn-restore, .btn-hard-delete');
+            if (!btn) return;
+            const isRestore = btn.classList.contains('btn-restore');
+            const item = btn.closest('.producto-item');
+            if (!isRestore && !confirm("¿Eliminar permanentemente?")) return;
+
+            try {
+                const action = isRestore ? 'restore' : 'hard_delete';
+                const res = await fetch(`/api/producto/${action}/${btn.dataset.id}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                });
+                if ((await res.json()).success) item.remove();
+            } catch (error) {
+                alert("Error.");
             }
         });
     }
