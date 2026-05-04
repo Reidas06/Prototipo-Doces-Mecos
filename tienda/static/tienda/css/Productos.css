@@ -549,6 +549,38 @@ body {
 .ver-todos-contenedor {
     display: flex;
     justify-content: center;
+    margin-top: 40px;
+}
+
+.btn-ver-todos {
+    padding: 15px 35px;
+    background-color: lightpink;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 50px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid lightpink;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-ver-todos:hover {
+    background-color: hotpink;
+    border-color: hotpink;
+    color: white;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4);
+}
+
+.btn-ver-todos:active {
+    transform: translateY(-2px) scale(1);
+}
+
+/* Ver todos los productos */
+.ver-todos-contenedor {
+    display: flex;
+    justify-content: center;
     margin-top: 50px;
     margin-bottom: 30px;
     width: 100%;
