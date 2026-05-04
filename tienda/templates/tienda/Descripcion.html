@@ -39,6 +39,10 @@
             <div class="cabecera-icons">
                 <a href="{% url 'carrito' %}" class="icon-link"><i class="fa-solid fa-cart-shopping"></i></a>
                 <a href="{% url 'formulario' %}" class="icon-link"><i class="fa-solid fa-user"></i></a>
+                <div class="lang-selector" style="display: flex; gap: 8px; align-items: center; margin-left: 15px;">
+                    <img src="https://flagcdn.com/w20/es.png" id="lang-es" style="cursor: pointer; transition: opacity 0.3s;" alt="Castellano" title="Castellano">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Flag_of_Galicia.svg/20px-Flag_of_Galicia.svg.png" id="lang-gl" style="cursor: pointer; transition: opacity 0.3s;" alt="Gallego" title="Gallego">
+                </div>
             </div>
         </div>
     </header>
@@ -84,6 +88,7 @@
     </footer>
 
     <script src="{% static 'tienda/js/carrito.js' %}"></script>
+    <script src="{% static 'tienda/js/traductor.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);

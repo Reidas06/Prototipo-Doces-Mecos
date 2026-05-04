@@ -18,4 +18,5 @@ urlpatterns = [
     path('api/producto/hard_delete/<int:pk>/', views.api_producto_hard_delete, name='api_producto_hard_delete'),
     path('api/producto/trash_list/', views.api_producto_trash_list, name='api_producto_trash_list'),
     path('api/producto/<int:pk>/', views.api_producto_detalle, name='api_producto_detalle'),
+    path('api/translate/', views.api_translate, name='api_translate'),
 ]

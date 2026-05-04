@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Producto
 import json
+from deep_translator import GoogleTranslator
 
 def inicio(request):
     return render(request, 'tienda/Principal.html')
@@ -149,3 +150,21 @@ def api_producto_detalle(request, pk):
         'imagen': producto.imagen.url if producto.imagen else None,
         'in_trash': producto.in_trash
     })
+
+@csrf_exempt
+def api_translate(request):
+    """API para traducir texto entre Castellano y Gallego."""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            text = data.get('text')
+            target_lang = data.get('target', 'gl') # 'gl' para gallego, 'es' para castellano
+            
+            if not text:
+                return JsonResponse({'status': 'error', 'message': 'No text provided'}, status=400)
+            
+            translated = GoogleTranslator(source='auto', target=target_lang).translate(text)
+            return JsonResponse({'status': 'ok', 'translated': translated})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
