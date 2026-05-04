@@ -47,6 +47,10 @@
     </header>
 
     <main class="principal-catalogo">
+        <div class="buscador-contenedor">
+            <input type="text" id="buscador-input" placeholder="Buscar productos...">
+            <button id="btn-buscar"><i class="fas fa-search"></i></button>
+        </div>
         {% if user.is_staff %}
         <!-- Modal para editar producto (Se mantiene para la edición) -->
         <div class="modal-overlay" id="edit-news-modal">
@@ -139,6 +143,7 @@
     {% if user.is_staff %}
     <script src="{% static 'tienda/js/gestion_productos.js' %}"></script>
     {% endif %}
+    <script src="{% static 'tienda/js/buscador.js' %}"></script>
     <script src="{% static 'tienda/js/traductor.js' %}"></script>
 </body>
 </html>

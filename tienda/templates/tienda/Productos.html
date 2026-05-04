@@ -6,7 +6,7 @@
     <link rel="icon" type="image/x-icon" href="{% static 'tienda/img/faviconlogo.ico' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos - Doces&Mecos</title>
+    <title>Doces&Mecos</title>
 
     <!-- ICONOS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -47,8 +47,9 @@
     </header>
 
     <main class="principal-catalogo">
-        <div class="search-container" style="display: flex; justify-content: center; margin-bottom: 20px;">
-            <input type="text" id="product-search" placeholder="Buscar productos..." style="padding: 10px; width: 300px; border-radius: 20px; border: 1px solid #ccc;">
+        <div class="buscador-contenedor">
+            <input type="text" id="buscador-input" placeholder="Buscar productos...">
+            <button id="btn-buscar"><i class="fas fa-search"></i></button>
         </div>
 
         {% if user.is_staff %}
