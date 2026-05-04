@@ -10,11 +10,12 @@ urlpatterns = [
     path('pago/', views.pago, name='pago'),
     path('formulario/', views.formulario, name='formulario'),
     
-    # API PRODUCTOS (Estilo Arrivelo)
+    # API PRODUCTOS
     path('api/producto/crear/', views.api_crear_producto, name='api_crear_producto'),
     path('api/producto/editar/<int:pk>/', views.api_producto_editar, name='api_producto_editar'),
     path('api/producto/delete/<int:pk>/', views.api_producto_soft_delete, name='api_producto_delete'),
     path('api/producto/restore/<int:pk>/', views.api_producto_restore, name='api_producto_restore'),
     path('api/producto/hard_delete/<int:pk>/', views.api_producto_hard_delete, name='api_producto_hard_delete'),
     path('api/producto/trash_list/', views.api_producto_trash_list, name='api_producto_trash_list'),
+    path('api/producto/<int:pk>/', views.api_producto_detalle, name='api_producto_detalle'),
 ]

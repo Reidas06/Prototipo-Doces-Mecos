@@ -37,7 +37,7 @@ def pago(request):
 def formulario(request):
     return render(request, 'tienda/Formulario.html')
 
-# --- API PRODUCTOS (Estilo Arrivelo) ---
+# --- API PRODUCTOS ---
 
 def api_crear_producto(request):
     if request.method == 'POST':
@@ -68,7 +68,7 @@ def api_producto_editar(request, pk):
     if request.method == 'POST':
         try:
             producto = Producto.objects.get(pk=pk)
-            # Manejamos tanto FormData como JSON (Arrivelo usa JSON en su script pero FormData es más fácil para imágenes)
+            # Manejamos tanto FormData como JSON
             if request.content_type == 'application/json':
                 data = json.loads(request.body)
                 producto.titulo = data.get('titulo', producto.titulo)
@@ -137,3 +137,15 @@ def api_producto_trash_list(request):
             'categoria': p.categoria,
         })
     return JsonResponse({'results': results, 'success': True})
+
+def api_producto_detalle(request, pk):
+    """Devuelve los detalles de un producto específico."""
+    producto = get_object_or_404(Producto, pk=pk)
+    return JsonResponse({
+        'id': producto.id,
+        'titulo': producto.titulo,
+        'descripcion': producto.descripcion,
+        'categoria': producto.categoria,
+        'imagen': producto.imagen.url if producto.imagen else None,
+        'in_trash': producto.in_trash
+    })
