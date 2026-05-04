@@ -131,7 +131,7 @@
             <!-- Envuelve las categorías para poder ocultarlas todas a la vez -->
             <section class="seccion-productos">
                 <h2>Ofertas</h2>
-                <div class="grid-productos">
+                <div class="grid-productos" id="grid-ofertas">
                     {% for producto in ofertas %}
                     <div class="producto-item" data-id="{{ producto.id }}" data-titulo="{{ producto.titulo }}" data-descripcion="{{ producto.descripcion|default:'' }}" data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}" class="producto-enlace">
@@ -154,7 +154,7 @@
 
             <section class="seccion-productos">
                 <h2>Lo mas vendido</h2>
-                <div class="grid-productos">
+                <div class="grid-productos" id="grid-vendido">
                     {% for producto in vendidos %}
                     <div class="producto-item" data-id="{{ producto.id }}" data-titulo="{{ producto.titulo }}" data-descripcion="{{ producto.descripcion|default:'' }}" data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}" class="producto-enlace">
@@ -177,7 +177,7 @@
 
             <section class="seccion-productos">
                 <h2>Por tiempo limitado</h2>
-                <div class="grid-productos">
+                <div class="grid-productos" id="grid-limitado">
                     {% for producto in limitado %}
                     <div class="producto-item" data-id="{{ producto.id }}" data-titulo="{{ producto.titulo }}" data-descripcion="{{ producto.descripcion|default:'' }}" data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}" class="producto-enlace">

@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const categoriasGrid = document.getElementById('categorias-productos');
     const trashGrid = document.getElementById('trash-grid');
 
+    // Mapeo de categorías a IDs de grid
+    const categoryGridMap = {
+        'ofertas': 'grid-ofertas',
+        'vendido': 'grid-vendido',
+        'limitado': 'grid-limitado'
+    };
+
     // --- Helper CSRF ---
     function getCookie(name) {
         let cookieValue = null;
@@ -75,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
             div.appendChild(actions);
         } else {
             const link = document.createElement('a');
-            link.href = '#'; // URL de descripción
+            link.href = '#'; 
             link.className = 'producto-enlace';
             link.appendChild(img);
             link.appendChild(title);
@@ -108,10 +115,10 @@ document.addEventListener('DOMContentLoaded', function () {
         btnAddProduct.addEventListener('click', () => addModal.classList.add('active'));
     }
     const closeModals = () => {
-        addModal.classList.remove('active');
-        editModal.classList.remove('active');
-        formAdd.reset();
-        formEdit.reset();
+        if (addModal) addModal.classList.remove('active');
+        if (editModal) editModal.classList.remove('active');
+        if (formAdd) formAdd.reset();
+        if (formEdit) formEdit.reset();
     };
     if (btnCloseAdd) btnCloseAdd.addEventListener('click', closeModals);
     if (btnCloseEdit) btnCloseEdit.addEventListener('click', closeModals);
@@ -169,7 +176,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const data = await res.json();
                 if (data.status === 'ok') {
                     if (data.producto) {
-                        const grid = categoriasGrid.querySelector('.grid-productos') || categoriasGrid;
+                        // Buscar el grid destino
+                        const targetGridId = categoryGridMap[data.producto.categoria];
+                        const grid = document.getElementById(targetGridId) || document.querySelector('.grid-productos') || categoriasGrid;
                         grid.prepend(createProductElement(data.producto));
                     } else {
                         window.location.reload();
@@ -207,12 +216,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.status === 'ok') {
                     const item = document.querySelector(`.producto-item[data-id="${id}"]`);
                     if (item) {
+                        const oldCat = item.dataset.categoria;
+                        const newCat = document.getElementById('e-categoria').value;
+                        
                         item.dataset.titulo = document.getElementById('e-titulo').value;
                         item.dataset.descripcion = document.getElementById('e-descripcion').value;
-                        item.dataset.categoria = document.getElementById('e-categoria').value;
+                        item.dataset.categoria = newCat;
                         item.querySelector('.producto-nombre').textContent = item.dataset.titulo;
+                        
                         if (data.producto && data.producto.imagen) {
                             item.querySelector('.producto-img-main').src = data.producto.imagen;
+                        }
+
+                        // Si la categoría cambió, mover el item
+                        if (oldCat !== newCat) {
+                            const targetGridId = categoryGridMap[newCat];
+                            const targetGrid = document.getElementById(targetGridId);
+                            if (targetGrid) {
+                                targetGrid.appendChild(item);
+                            }
                         }
                     }
                     closeModals();
@@ -228,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Papelera ---
     async function loadTrash() {
+        if (!trashGrid) return;
         trashGrid.textContent = 'Cargando papelera...';
         try {
             const res = await fetch('/api/producto/trash_list/');
@@ -267,7 +290,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     method: 'POST',
                     headers: { 'X-CSRFToken': getCookie('csrftoken') }
                 });
-                if ((await res.json()).success) item.remove();
+                if ((await res.json()).success) {
+                    item.remove();
+                    if (isRestore && !window.location.href.includes('todos_productos')) {
+                        // En la página principal, recargamos para que aparezca en su categoría
+                        // o podríamos intentar moverlo si supiéramos la categoría, 
+                        // pero restore no suele devolver el objeto.
+                        window.location.reload();
+                    }
+                }
             } catch (error) {
                 alert("Error.");
             }

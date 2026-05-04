@@ -43,25 +43,70 @@
     </header>
 
     <main class="principal-catalogo">
-        <section class="seccion-productos">
-            <h2>Todos los productos</h2>
-            <div class="grid-productos">
-                {% for producto in productos %}
-                <a href="{% url 'descripcion' %}">
-                    <div class="producto-item" data-id="{{ producto.id }}">
-                        {% if producto.imagen %}
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}">
-                        {% else %}
-                        <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}">
-                        {% endif %}
-                        <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+        <!-- Modal para editar producto (Se mantiene para la edición) -->
+        <div class="modal-overlay" id="edit-news-modal">
+            <div class="modal-content">
+                <button class="modal-close" id="btn-close-edit">&times;</button>
+                <h2 class="modal-title">Editar producto</h2>
+                <form id="edit-news-form">
+                    {% csrf_token %}
+                    <input type="hidden" id="e-id">
+                    <div class="form-group">
+                        <label for="e-titulo">Título</label>
+                        <input type="text" id="e-titulo" name="titulo" required>
                     </div>
-                </a>
-                {% empty %}
-                <p>No hay productos disponibles.</p>
-                {% endfor %}
+                    <div class="form-group">
+                        <label for="e-imagen">Imagen (Opcional)</label>
+                        <input type="file" id="e-imagen" name="imagen" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="e-descripcion">Descripción</label>
+                        <textarea id="e-descripcion" name="descripcion"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="e-categoria">Categoría</label>
+                        <select id="e-categoria" name="categoria">
+                            <option value="ninguna">Ninguna</option>
+                            <option value="ofertas">Ofertas</option>
+                            <option value="vendido">Lo más vendido</option>
+                            <option value="limitado">Por tiempo limitado</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-add-news" style="width:100%;">Actualizar Producto</button>
+                </form>
             </div>
-        </section>
+        </div>
+
+        <!-- El div categorias-productos se mantiene para que el JS lo encuentre -->
+        <div id="categorias-productos">
+            <section class="seccion-productos">
+                <h2>Todos los productos</h2>
+                <div class="grid-productos">
+                    {% for producto in productos %}
+                    <div class="producto-item" 
+                         data-id="{{ producto.id }}" 
+                         data-titulo="{{ producto.titulo }}" 
+                         data-descripcion="{{ producto.descripcion|default:'' }}" 
+                         data-categoria="{{ producto.categoria }}">
+                        <a href="{% url 'descripcion' %}" class="producto-enlace">
+                            {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}" class="producto-img-main">
+                            {% else %}
+                            <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
+                            {% endif %}
+                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+                        </a>
+                        <div class="producto-admin-btns">
+                            <button class="btn-edit-item" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn-delete-item" title="Enviar a papelera"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No hay productos disponibles.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
 
         <div class="ver-todos-contenedor">
             <a href="{% url 'productos' %}" class="btn-ver-todos">Volver a categorías</a>
@@ -79,20 +124,10 @@
             <a href="https://www.instagram.com/doces_e_mecos/?hl=es" class="instagram-link">
                 <i class="fa-brands fa-instagram"></i> @doces_e_mecos
             </a>
-            <p><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
-                    <font dir="auto" style="vertical-align: inherit;">
-                        <font dir="auto" style="vertical-align: inherit;">CC BY-NC-ND 4.0</font>
-                    </font>
-                </a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""
-                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
-                    src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""
-                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
-                    src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt=""
-                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
-                    src="https://mirrors.creativecommons.org/presskit/icons/nd.svg" alt=""
-                    style="max-width: 1em;max-height:1em;margin-left: .2em;"></p>
+            <p><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a></p>
         </div>
     </footer>
-</body>
 
+    <script src="{% static 'tienda/js/gestion_productos.js' %}"></script>
+</body>
 </html>
