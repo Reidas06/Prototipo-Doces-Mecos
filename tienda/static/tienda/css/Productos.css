@@ -494,7 +494,10 @@ body {
     opacity: 1;
 }
 
-.btn-edit-item, .btn-delete-item, .btn-restore, .btn-hard-delete {
+.btn-edit-item,
+.btn-delete-item,
+.btn-restore,
+.btn-hard-delete {
     padding: 8px;
     border: none;
     border-radius: 4px;
@@ -504,13 +507,31 @@ body {
     transition: transform 0.2s, background-color 0.3s;
 }
 
-.btn-edit-item { background-color: #1a4a75; }
-.btn-delete-item { background-color: #e74c3c; }
-.btn-restore { background-color: #27ae60; }
-.btn-hard-delete { background-color: #8b0000; }
+.btn-edit-item {
+    background-color: #1a4a75;
+}
 
-.btn-edit-item:hover { background-color: #0d2c4a; transform: scale(1.1); }
-.btn-delete-item:hover { background-color: #c0392b; transform: scale(1.1); }
+.btn-delete-item {
+    background-color: #e74c3c;
+}
+
+.btn-restore {
+    background-color: #27ae60;
+}
+
+.btn-hard-delete {
+    background-color: #8b0000;
+}
+
+.btn-edit-item:hover {
+    background-color: #0d2c4a;
+    transform: scale(1.1);
+}
+
+.btn-delete-item:hover {
+    background-color: #c0392b;
+    transform: scale(1.1);
+}
 
 /* Estilos papelera grid */
 #trash-grid .producto-item {
@@ -523,4 +544,40 @@ body {
     justify-content: center;
     gap: 10px;
 }
-
+
+/* Ver todos los productos */
+.ver-todos-contenedor {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.ver-todos-contenedor a.btn-ver-todos {
+    padding: 16px 45px;
+    background-color: lightpink;
+    color: white !important;
+    text-decoration: none !important;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 50px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid lightpink;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+}
+
+.ver-todos-contenedor a.btn-ver-todos:hover {
+    background-color: #ff1493;
+    border-color: #ff1493;
+    color: white !important;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(255, 20, 147, 0.5);
+}
+
+.ver-todos-contenedor a.btn-ver-todos:active {
+    transform: translateY(-2px) scale(1);
+}
