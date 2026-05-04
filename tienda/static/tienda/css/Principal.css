@@ -203,9 +203,8 @@ body {
     gap: 8px;
 }
 
-.pie-right p {
+.pie-right p a {
     text-decoration: none;
-    font-size: 18px;
     color: black;
 }
 
