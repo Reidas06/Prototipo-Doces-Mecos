@@ -273,7 +273,7 @@ body {
 }
 
 /*Responsive para moviles*/
-@media (max-width: 576px) {
+@media (max-width: 441px) {
     .cabecera-center h1 {
         font-size: 20px;
     }

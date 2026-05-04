@@ -144,7 +144,7 @@ body {
     font-size: 22px;
     color: black;
     margin-bottom: 30px;
-    padding-left: 10px;
+    text-align: center;
 }
 
 .grid-productos {
@@ -189,14 +189,14 @@ body {
 }
 
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
     .grid-productos {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 
-@media (max-width: 500px) {
+@media (max-width: 441px) {
     .grid-productos {
         grid-template-columns: 1fr;
     }
@@ -259,7 +259,7 @@ body {
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 441px) {
     .pie-left p {
         font-size: 12px;
     }
