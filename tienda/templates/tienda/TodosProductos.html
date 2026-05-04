@@ -47,6 +47,7 @@
     </header>
 
     <main class="principal-catalogo">
+        {% if user.is_staff %}
         <!-- Modal para editar producto (Se mantiene para la edición) -->
         <div class="modal-overlay" id="edit-news-modal">
             <div class="modal-content">
@@ -80,6 +81,7 @@
                 </form>
             </div>
         </div>
+        {% endif %}
 
         <!-- El div categorias-productos se mantiene para que el JS lo encuentre -->
         <div id="categorias-productos">
@@ -88,10 +90,10 @@
                 <div class="grid-productos">
                     {% for producto in productos %}
                     <div class="producto-item" 
-                        data-id="{{ producto.id }}" 
-                        data-titulo="{{ producto.titulo }}" 
-                        data-descripcion="{{ producto.descripcion|default:'' }}" 
-                        data-categoria="{{ producto.categoria }}">
+                         data-id="{{ producto.id }}" 
+                         data-titulo="{{ producto.titulo }}" 
+                         data-descripcion="{{ producto.descripcion|default:'' }}" 
+                         data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">
                             {% if producto.imagen %}
                             <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}" class="producto-img-main">
@@ -100,10 +102,12 @@
                             {% endif %}
                             <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                         </a>
+                        {% if user.is_staff %}
                         <div class="producto-admin-btns">
                             <button class="btn-edit-item" title="Editar"><i class="fas fa-edit"></i></button>
                             <button class="btn-delete-item" title="Enviar a papelera"><i class="fas fa-trash"></i></button>
                         </div>
+                        {% endif %}
                     </div>
                     {% empty %}
                     <p>No hay productos disponibles.</p>
@@ -132,7 +136,9 @@
         </div>
     </footer>
 
+    {% if user.is_staff %}
     <script src="{% static 'tienda/js/gestion_productos.js' %}"></script>
+    {% endif %}
     <script src="{% static 'tienda/js/traductor.js' %}"></script>
 </body>
 </html>

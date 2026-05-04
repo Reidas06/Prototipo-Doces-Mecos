@@ -6,7 +6,7 @@
     <link rel="icon" type="image/x-icon" href="{% static 'tienda/img/faviconlogo.ico' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doces&Mecos</title>
+    <title>Productos - Doces&Mecos</title>
 
     <!-- ICONOS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -47,17 +47,18 @@
     </header>
 
     <main class="principal-catalogo">
-        <div class="buscador-contenedor">
-            <input type="text" id="buscador-input" placeholder="Buscar productos por nombre...">
-            <button id="btn-buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <div class="search-container" style="display: flex; justify-content: center; margin-bottom: 20px;">
+            <input type="text" id="product-search" placeholder="Buscar productos..." style="padding: 10px; width: 300px; border-radius: 20px; border: 1px solid #ccc;">
         </div>
 
+        {% if user.is_staff %}
+        <!-- Acciones de administrador -->
         <div class="admin-actions" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
             <button class="btn-add-news" id="btn-add-news"><i class="fas fa-plus"></i> <span>Añadir Producto</span></button>
             <button class="btn-add-news" id="btn-trash-view" style="background-color: #e74c3c;"><i class="fas fa-trash"></i> <span>Papelera</span></button>
         </div>
 
-        <!-- Modal para añadir producto (Estilo Arrivelo) -->
+        <!-- Modal para añadir producto -->
         <div class="modal-overlay" id="add-news-modal">
             <div class="modal-content">
                 <button class="modal-close" id="btn-close-modal">&times;</button>
@@ -66,20 +67,20 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="n-titulo">Título del producto</label>
-                        <input type="text" id="n-titulo" name="titulo" required placeholder="Ej: Caramelos de fresa">
+                        <input type="text" id="n-titulo" name="titulo" required>
                     </div>
                     <div class="form-group">
-                        <label for="n-imagen">Imagen del producto</label>
+                        <label for="n-imagen">Imagen</label>
                         <input type="file" id="n-imagen" name="imagen" accept="image/*">
                     </div>
                     <div class="form-group">
                         <label for="n-descripcion">Descripción</label>
-                        <textarea id="n-descripcion" name="descripcion" placeholder="Resumen del producto..."></textarea>
+                        <textarea id="n-descripcion" name="descripcion"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="n-categoria">Categoría</label>
                         <select id="n-categoria" name="categoria">
-                            <option value="ninguna">Ninguna (solo en Todos)</option>
+                            <option value="ninguna">Ninguna</option>
                             <option value="ofertas">Ofertas</option>
                             <option value="vendido">Lo más vendido</option>
                             <option value="limitado">Por tiempo limitado</option>
@@ -90,7 +91,7 @@
             </div>
         </div>
 
-        <!-- Modal para editar producto (Estilo Arrivelo) -->
+        <!-- Modal para editar producto -->
         <div class="modal-overlay" id="edit-news-modal">
             <div class="modal-content">
                 <button class="modal-close" id="btn-close-edit">&times;</button>
@@ -99,11 +100,11 @@
                     {% csrf_token %}
                     <input type="hidden" id="e-id">
                     <div class="form-group">
-                        <label for="e-titulo">Título del producto</label>
+                        <label for="e-titulo">Título</label>
                         <input type="text" id="e-titulo" name="titulo" required>
                     </div>
                     <div class="form-group">
-                        <label for="e-imagen">Cambiar imagen (Opcional)</label>
+                        <label for="e-imagen">Imagen (Opcional)</label>
                         <input type="file" id="e-imagen" name="imagen" accept="image/*">
                     </div>
                     <div class="form-group">
@@ -124,15 +125,13 @@
             </div>
         </div>
 
-        </section>
-
-        <!-- Contenedor para la papelera (Estilo Arrivelo) -->
+        <!-- Contenedor para la papelera -->
         <div id="trash-grid" class="grid-productos" style="display: none; grid-template-columns: repeat(4, 1fr); gap: 30px; width: 100%; justify-items: center; align-items: center;">
             <!-- Se cargará dinámicamente -->
         </div>
+        {% endif %}
 
         <div id="categorias-productos">
-            <!-- Envuelve las categorías para poder ocultarlas todas a la vez -->
             <section class="seccion-productos">
                 <h2>Ofertas</h2>
                 <div class="grid-productos" id="grid-ofertas">
@@ -146,11 +145,12 @@
                             {% endif %}
                             <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                         </a>
-                        <!-- Botones de gestión rápida -->
+                        {% if user.is_staff %}
                         <div class="producto-admin-btns">
                             <button class="btn-edit-item" title="Editar"><i class="fas fa-edit"></i></button>
                             <button class="btn-delete-item" title="Enviar a papelera"><i class="fas fa-trash"></i></button>
                         </div>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -169,11 +169,12 @@
                             {% endif %}
                             <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                         </a>
-                        <!-- Botones de gestión rápida -->
+                        {% if user.is_staff %}
                         <div class="producto-admin-btns">
                             <button class="btn-edit-item" title="Editar"><i class="fas fa-edit"></i></button>
                             <button class="btn-delete-item" title="Enviar a papelera"><i class="fas fa-trash"></i></button>
                         </div>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -184,7 +185,7 @@
                 <div class="grid-productos" id="grid-limitado">
                     {% for producto in limitado %}
                     <div class="producto-item" data-id="{{ producto.id }}" data-titulo="{{ producto.titulo }}" data-descripcion="{{ producto.descripcion|default:'' }}" data-categoria="{{ producto.categoria }}">
-                        <a href="{% url 'descripcion' %}" class="producto-enlace">
+                        <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">
                             {% if producto.imagen %}
                             <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% else %}
@@ -192,18 +193,18 @@
                             {% endif %}
                             <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                         </a>
-                        <!-- Botones de gestión rápida -->
+                        {% if user.is_staff %}
                         <div class="producto-admin-btns">
                             <button class="btn-edit-item" title="Editar"><i class="fas fa-edit"></i></button>
                             <button class="btn-delete-item" title="Enviar a papelera"><i class="fas fa-trash"></i></button>
                         </div>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
             </section>
         </div>
 
-        <!-- BOTÓN VER TODOS LOS PRODUCTOS -->
         <div class="ver-todos-contenedor">
             <a href="{% url 'todos_productos' %}" class="btn-ver-todos">Ver todos los productos</a>
         </div>
@@ -220,22 +221,14 @@
             <a href="https://www.instagram.com/doces_e_mecos/?hl=es" class="instagram-link">
                 <i class="fa-brands fa-instagram"></i> @doces_e_mecos
             </a>
-            <p><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
-                    <font dir="auto" style="vertical-align: inherit;">
-                        <font dir="auto" style="vertical-align: inherit;">CC BY-NC-ND 4.0</font>
-                    </font>
-                </a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""
-                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
-                    src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""
-                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
-                    src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt=""
-                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
-                    src="https://mirrors.creativecommons.org/presskit/icons/nd.svg" alt=""
-                    style="max-width: 1em;max-height:1em;margin-left: .2em;"></p>
+            <p><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a></p>
         </div>
     </footer>
+
     <script src="{% static 'tienda/js/buscador.js' %}"></script>
+    {% if user.is_staff %}
     <script src="{% static 'tienda/js/gestion_productos.js' %}"></script>
+    {% endif %}
     <script src="{% static 'tienda/js/traductor.js' %}"></script>
 </body>
 

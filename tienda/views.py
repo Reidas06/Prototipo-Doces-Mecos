@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.admin.views.decorators import staff_member_required
 from .models import Producto
 import json
 from deep_translator import GoogleTranslator
@@ -40,6 +41,7 @@ def formulario(request):
 
 # --- API PRODUCTOS ---
 
+@staff_member_required
 def api_crear_producto(request):
     if request.method == 'POST':
         titulo = request.POST.get('titulo', '')
@@ -65,6 +67,7 @@ def api_crear_producto(request):
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
 @csrf_exempt
+@staff_member_required
 def api_producto_editar(request, pk):
     if request.method == 'POST':
         try:
@@ -89,6 +92,7 @@ def api_producto_editar(request, pk):
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
 @csrf_exempt
+@staff_member_required
 def api_producto_soft_delete(request, pk):
     """Envía el producto a la papelera."""
     if request.method == 'POST':
@@ -102,6 +106,7 @@ def api_producto_soft_delete(request, pk):
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
 @csrf_exempt
+@staff_member_required
 def api_producto_restore(request, pk):
     """Restaura el producto de la papelera."""
     if request.method == 'POST':
@@ -115,6 +120,7 @@ def api_producto_restore(request, pk):
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
 @csrf_exempt
+@staff_member_required
 def api_producto_hard_delete(request, pk):
     """Elimina permanentemente el producto."""
     if request.method == 'POST':
@@ -126,6 +132,7 @@ def api_producto_hard_delete(request, pk):
             return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
+@staff_member_required
 def api_producto_trash_list(request):
     """Devuelve la lista de productos en la papelera."""
     productos_trash = Producto.objects.filter(in_trash=True)
