@@ -134,7 +134,7 @@
                 <div class="grid-productos" id="grid-ofertas">
                     {% for producto in ofertas %}
                     <div class="producto-item" data-id="{{ producto.id }}" data-titulo="{{ producto.titulo }}" data-descripcion="{{ producto.descripcion|default:'' }}" data-categoria="{{ producto.categoria }}">
-                        <a href="{% url 'descripcion' %}" class="producto-enlace">
+                        <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">
                             {% if producto.imagen %}
                             <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% else %}
@@ -157,7 +157,7 @@
                 <div class="grid-productos" id="grid-vendido">
                     {% for producto in vendidos %}
                     <div class="producto-item" data-id="{{ producto.id }}" data-titulo="{{ producto.titulo }}" data-descripcion="{{ producto.descripcion|default:'' }}" data-categoria="{{ producto.categoria }}">
-                        <a href="{% url 'descripcion' %}" class="producto-enlace">
+                        <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">
                             {% if producto.imagen %}
                             <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% else %}
