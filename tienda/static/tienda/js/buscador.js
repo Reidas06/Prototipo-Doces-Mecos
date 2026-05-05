@@ -4,17 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function filtrarProductos() {
         const textoBusqueda = inputBuscador.value.toLowerCase().trim();
-        const productosLinks = document.querySelectorAll('.grid-productos > a');
+        // Seleccionamos todos los contenedores de producto
+        const productosItems = document.querySelectorAll('.producto-item');
 
-        productosLinks.forEach(link => {
-            const nombreElement = link.querySelector('.producto-nombre');
+        productosItems.forEach(item => {
+            const nombreElement = item.querySelector('.producto-nombre');
             if (nombreElement) {
                 const nombreProducto = nombreElement.textContent.toLowerCase();
-                // Si el nombre incluye el texto buscado, se muestra, sino se oculta
+                // Si el nombre incluye el texto buscado, se muestra el contenedor, sino se oculta
                 if (nombreProducto.includes(textoBusqueda)) {
-                    link.style.display = '';
+                    item.style.display = '';
                 } else {
-                    link.style.display = 'none';
+                    item.style.display = 'none';
                 }
             }
         });

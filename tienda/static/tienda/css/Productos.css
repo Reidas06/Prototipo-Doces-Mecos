@@ -144,7 +144,7 @@ body {
     font-size: 22px;
     color: black;
     margin-bottom: 30px;
-    text-align: center;
+    padding-left: 10px;
 }
 
 .grid-productos {
@@ -154,11 +154,16 @@ body {
     width: 100%;
     justify-items: center;
     align-items: center;
+    justify-content: center;
 }
 
-.grid-productos a {
+.producto-enlace {
     text-decoration: none;
     color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 .producto-item {
@@ -183,9 +188,12 @@ body {
 }
 
 .producto-item img {
-    max-width: 90%;
-    height: auto;
+    width: 100%;
+    height: 220px;
+    /* Altura uniforme para alinear los títulos debajo */
+    object-fit: contain;
     display: block;
+    margin-bottom: 15px;
 }
 
 
