@@ -18,7 +18,7 @@ function saveCart(cart) {
 // Añadir producto al carrito
 function addToCart(product) {
     let cart = getCart();
-    const existingProductIndex = cart.findIndex(item => item.id === product.id);
+    const existingProductIndex = cart.findIndex(item => String(item.id) === String(product.id));
 
     if (existingProductIndex > -1) {
         cart[existingProductIndex].quantity += product.quantity;
@@ -32,17 +32,19 @@ function addToCart(product) {
 // Eliminar producto del carrito
 function removeFromCart(productId) {
     let cart = getCart();
-    cart = cart.filter(item => item.id !== productId);
+    cart = cart.filter(item => String(item.id) !== String(productId));
     saveCart(cart);
 }
 
 // Actualizar cantidad de un producto en el carrito
 function updateQuantity(productId, delta) {
     let cart = getCart();
-    const productIndex = cart.findIndex(item => item.id === productId);
+    // Convertimos ambos a String para evitar errores de tipo (number vs string)
+    const productIndex = cart.findIndex(item => String(item.id) === String(productId));
 
     if (productIndex > -1) {
         cart[productIndex].quantity += delta;
+        // No permitir cantidades menores a 1, si es 0 o menos se elimina
         if (cart[productIndex].quantity <= 0) {
             cart.splice(productIndex, 1);
         }
