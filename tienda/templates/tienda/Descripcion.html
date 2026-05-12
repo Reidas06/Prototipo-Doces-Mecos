@@ -114,6 +114,12 @@
                 if (!res.ok) throw new Error('Producto no encontrado');
                 const product = await res.json();
 
+                const container = document.getElementById('product-detail-container');
+                container.setAttribute('data-titulo', product.titulo);
+                container.setAttribute('data-titulo-gl', product.titulo_gl || '');
+                container.setAttribute('data-descripcion', product.descripcion || '');
+                container.setAttribute('data-descripcion-gl', product.descripcion_gl || '');
+
                 pTitulo.textContent = product.titulo;
                 pImg.src = product.imagen || '{% static "tienda/img/sea-9983074_640.jpg" %}';
                 pImg.alt = product.titulo;
@@ -123,6 +129,17 @@
                     pDesc.innerHTML = product.descripcion.split('\n').map(line => `<p>${line}</p>`).join('');
                 } else {
                     pDesc.innerHTML = "<p>Sin descripción disponible.</p>";
+                }
+
+                // Si el idioma actual es gallego, traducir inmediatamente
+                if (typeof translatePage === 'function') {
+                    translatePage();
+                } else if (localStorage.getItem('appLang') === 'gl') {
+                    // Fallback si traductor.js aún no expone la función globalmente
+                    if (product.titulo_gl) pTitulo.textContent = product.titulo_gl;
+                    if (product.descripcion_gl) {
+                        pDesc.innerHTML = product.descripcion_gl.split('\n').map(line => `<p>${line}</p>`).join('');
+                    }
                 }
 
                 // Listeners de cantidad

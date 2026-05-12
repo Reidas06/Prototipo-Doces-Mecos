@@ -17,38 +17,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const translateText = async (text, target) => {
-        try {
-            const res = await fetch('/api/translate/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, target })
-            });
-            const data = await res.json();
-            return data.translated || text;
-        } catch (error) {
-            console.error("Error al traducir:", error);
-            return text;
-        }
-    };
+    /**
+     * Traduce la página utilizando los datos persistentes en el DOM (data-attributes)
+     * Esto evita llamadas a la API externa y mantiene el formato exacto de la DB.
+     */
+    const translatePage = () => {
+        // Traducir nombres de productos
+        const nombres = document.querySelectorAll('.producto-nombre');
+        nombres.forEach(el => {
+            const container = el.closest('.producto-item');
+            if (container) {
+                if (currentLang === 'gl') {
+                    const glText = container.getAttribute('data-titulo-gl');
+                    if (glText) el.textContent = glText;
+                } else {
+                    el.textContent = container.getAttribute('data-titulo');
+                }
+            }
+        });
 
-    const translatePage = async () => {
-        // Por ahora solo traducimos descripciones de productos/noticias
-        // Buscamos elementos con la clase 'translatable' o específicos
-        const elements = document.querySelectorAll('.producto-desc, .producto-descripcion p, .producto-nombre');
-        
-        for (let el of elements) {
-            const originalText = el.getAttribute('data-original-text') || el.textContent;
-            if (!el.getAttribute('data-original-text')) {
-                el.setAttribute('data-original-text', originalText);
+        // Traducir descripciones (si existen en la página actual)
+        const descs = document.querySelectorAll('.producto-desc, .producto-descripcion p');
+        descs.forEach(el => {
+            const container = el.closest('.producto-item') || document.querySelector('.producto-detalle-container');
+            if (container) {
+                if (currentLang === 'gl') {
+                    const glText = container.getAttribute('data-descripcion-gl');
+                    if (glText) el.textContent = glText;
+                } else {
+                    el.textContent = container.getAttribute('data-descripcion');
+                }
             }
-            
-            if (currentLang === 'gl') {
-                el.textContent = await translateText(originalText, 'gl');
-            } else {
-                el.textContent = originalText;
-            }
-        }
+        });
     };
 
     if (langES) {
@@ -69,7 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Exponer la función globalmente para que otras páginas (como Descripcion.html) puedan llamarla
+    window.translatePage = translatePage;
+
     // Inicializar
     updateUI();
-    if (currentLang === 'gl') translatePage();
+    translatePage(); // Se ejecuta siempre para asegurar que el idioma persistido se aplique
 });

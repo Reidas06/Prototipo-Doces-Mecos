@@ -95,7 +95,9 @@
                     <div class="producto-item" 
                          data-id="{{ producto.id }}" 
                          data-titulo="{{ producto.titulo }}" 
+                         data-titulo-gl="{{ producto.titulo_gl|default:'' }}"
                          data-descripcion="{{ producto.descripcion|default:'' }}" 
+                         data-descripcion-gl="{{ producto.descripcion_gl|default:'' }}"
                          data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">
                             {% if producto.imagen %}
