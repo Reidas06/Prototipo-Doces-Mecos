@@ -1,4 +1,5 @@
 from django.db import models
+from deep_translator import GoogleTranslator
 
 class Producto(models.Model):
     CATEGORIAS = [
@@ -9,10 +10,29 @@ class Producto(models.Model):
     ]
 
     titulo = models.CharField(max_length=200)
+    titulo_gl = models.CharField(max_length=200, null=True, blank=True)
     imagen = models.ImageField(upload_to='productos/', null=True, blank=True)
     descripcion = models.TextField(null=True, blank=True)
+    descripcion_gl = models.TextField(null=True, blank=True)
     categoria = models.CharField(max_length=20, choices=CATEGORIAS, default='ninguna')
     in_trash = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        # Traducción automática del título si está vacío
+        if self.titulo and not self.titulo_gl:
+            try:
+                self.titulo_gl = GoogleTranslator(source='es', target='gl').translate(self.titulo)
+            except Exception as e:
+                print(f"Error traduciendo título: {e}")
+        
+        # Traducción automática de la descripción si está vacía
+        if self.descripcion and not self.descripcion_gl:
+            try:
+                self.descripcion_gl = GoogleTranslator(source='es', target='gl').translate(self.descripcion)
+            except Exception as e:
+                print(f"Error traduciendo descripción: {e}")
+                
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.titulo

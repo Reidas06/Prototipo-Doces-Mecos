@@ -56,12 +56,13 @@ def api_crear_producto(request):
         )
         if imagen:
             producto.imagen = imagen
-        producto.save()
+        producto.save() # El método save maneja la traducción automática
         
         return JsonResponse({
             'status': 'ok',
             'id': producto.id,
             'titulo': producto.titulo,
+            'titulo_gl': producto.titulo_gl,
             'categoria': producto.categoria,
         })
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
@@ -78,10 +79,16 @@ def api_producto_editar(request, pk):
                 producto.titulo = data.get('titulo', producto.titulo)
                 producto.descripcion = data.get('descripcion', producto.descripcion)
                 producto.categoria = data.get('categoria', producto.categoria)
+                # Opcional: permitir editar las traducciones directamente desde la API
+                producto.titulo_gl = data.get('titulo_gl', producto.titulo_gl)
+                producto.descripcion_gl = data.get('descripcion_gl', producto.descripcion_gl)
             else:
                 producto.titulo = request.POST.get('titulo', producto.titulo)
                 producto.descripcion = request.POST.get('descripcion', producto.descripcion)
                 producto.categoria = request.POST.get('categoria', producto.categoria)
+                producto.titulo_gl = request.POST.get('titulo_gl', producto.titulo_gl)
+                producto.descripcion_gl = request.POST.get('descripcion_gl', producto.descripcion_gl)
+                
                 if 'imagen' in request.FILES:
                     producto.imagen = request.FILES['imagen']
             
@@ -141,6 +148,7 @@ def api_producto_trash_list(request):
         results.append({
             'id': p.id,
             'titulo': p.titulo,
+            'titulo_gl': p.titulo_gl,
             'imagen': p.imagen.url if p.imagen else None,
             'categoria': p.categoria,
         })
@@ -152,7 +160,9 @@ def api_producto_detalle(request, pk):
     return JsonResponse({
         'id': producto.id,
         'titulo': producto.titulo,
+        'titulo_gl': producto.titulo_gl,
         'descripcion': producto.descripcion,
+        'descripcion_gl': producto.descripcion_gl,
         'categoria': producto.categoria,
         'imagen': producto.imagen.url if producto.imagen else None,
         'in_trash': producto.in_trash
@@ -160,12 +170,12 @@ def api_producto_detalle(request, pk):
 
 @csrf_exempt
 def api_translate(request):
-    """API para traducir texto entre Castellano y Gallego."""
+    """API para traducir texto genérico (mantenida por compatibilidad si es necesaria)."""
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             text = data.get('text')
-            target_lang = data.get('target', 'gl') # 'gl' para gallego, 'es' para castellano
+            target_lang = data.get('target', 'gl')
             
             if not text:
                 return JsonResponse({'status': 'error', 'message': 'No text provided'}, status=400)
