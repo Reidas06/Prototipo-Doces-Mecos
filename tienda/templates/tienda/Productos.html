@@ -133,10 +133,7 @@
 
         <div id="categorias-productos">
             <section class="seccion-productos">
-                <h2>
-                    <span class="es">Ofertas</span>
-                    <span class="gl">Ofertas</span>
-                </h2>
+                <h2>Ofertas</h2>
                 <div class="grid-productos" id="grid-ofertas">
                     {% for producto in ofertas %}
                     <div class="producto-item" 
@@ -150,10 +147,7 @@
                             {% else %}
                             <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% endif %}
-                            <h3 class="producto-nombre">
-                                <span class="es">{{ producto.titulo }}</span>
-                                <span class="gl">{{ producto.titulo_gl|default:producto.titulo }}</span>
-                            </h3>
+                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                         </a>
                         {% if user.is_staff %}
                         <div class="producto-admin-btns">
@@ -167,10 +161,7 @@
             </section>
 
             <section class="seccion-productos">
-                <h2>
-                    <span class="es">Lo más vendido</span>
-                    <span class="gl">O máis vendido</span>
-                </h2>
+                <h2>Lo más vendido</h2>
                 <div class="grid-productos" id="grid-vendido">
                     {% for producto in vendidos %}
                     <div class="producto-item" 
@@ -184,10 +175,7 @@
                             {% else %}
                             <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% endif %}
-                            <h3 class="producto-nombre">
-                                <span class="es">{{ producto.titulo }}</span>
-                                <span class="gl">{{ producto.titulo_gl|default:producto.titulo }}</span>
-                            </h3>
+                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                         </a>
                         {% if user.is_staff %}
                         <div class="producto-admin-btns">
@@ -201,10 +189,7 @@
             </section>
 
             <section class="seccion-productos">
-                <h2>
-                    <span class="es">Por tiempo limitado</span>
-                    <span class="gl">Por tempo limitado</span>
-                </h2>
+                <h2>Por tiempo limitado</h2>
                 <div class="grid-productos" id="grid-limitado">
                     {% for producto in limitado %}
                     <div class="producto-item" 
@@ -218,10 +203,7 @@
                             {% else %}
                             <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% endif %}
-                            <h3 class="producto-nombre">
-                                <span class="es">{{ producto.titulo }}</span>
-                                <span class="gl">{{ producto.titulo_gl|default:producto.titulo }}</span>
-                            </h3>
+                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
                         </a>
                         {% if user.is_staff %}
                         <div class="producto-admin-btns">

@@ -120,27 +120,18 @@
                 container.setAttribute('data-descripcion', product.descripcion || '');
                 container.setAttribute('data-descripcion-gl', product.descripcion_gl || '');
 
-                pTitulo.innerHTML = `
-                    <span class="es">${product.titulo}</span>
-                    <span class="gl">${product.titulo_gl || product.titulo}</span>
-                `;
+                pTitulo.textContent = product.titulo;
                 pImg.src = product.imagen || '{% static "tienda/img/sea-9983074_640.jpg" %}';
                 pImg.alt = product.titulo;
                 
-                // Formatear descripción si existe con spans de idioma
+                // Formatear descripción
                 if (product.descripcion) {
-                    const esLines = product.descripcion.split('\n').map(line => `<p class="es">${line}</p>`).join('');
-                    const glText = product.descripcion_gl || product.descripcion;
-                    const glLines = glText.split('\n').map(line => `<p class="gl">${line}</p>`).join('');
-                    pDesc.innerHTML = esLines + glLines;
+                    pDesc.innerHTML = product.descripcion.split('\n').map(line => `<p>${line}</p>`).join('');
                 } else {
-                    pDesc.innerHTML = `
-                        <p class="es">Sin descripción disponible.</p>
-                        <p class="gl">Sen descrición dispoñible.</p>
-                    `;
+                    pDesc.innerHTML = "<p>Sin descripción disponible.</p>";
                 }
 
-                // Aplicar el idioma actual inmediatamente
+                // Aplicar el idioma actual inmediatamente desde el cache
                 if (typeof translatePage === 'function') {
                     translatePage();
                 }

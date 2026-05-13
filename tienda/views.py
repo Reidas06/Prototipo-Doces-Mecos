@@ -168,6 +168,19 @@ def api_producto_detalle(request, pk):
         'in_trash': producto.in_trash
     })
 
+def api_productos_traducciones(request):
+    """Devuelve un mapa de traducciones para todos los productos activos."""
+    productos = Producto.objects.filter(in_trash=False)
+    traducciones = {}
+    for p in productos:
+        traducciones[p.id] = {
+            'titulo_gl': p.titulo_gl or p.titulo,
+            'descripcion_gl': p.descripcion_gl or p.descripcion,
+            'titulo_es': p.titulo,
+            'descripcion_es': p.descripcion
+        }
+    return JsonResponse({'traducciones': traducciones})
+
 @csrf_exempt
 def api_translate(request):
     """API para traducir texto genérico (mantenida por compatibilidad si es necesaria)."""
