@@ -133,15 +133,16 @@
 
         <div id="categorias-productos">
             <section class="seccion-productos">
-                <h2>Ofertas</h2>
+                <h2>
+                    <span class="es">Ofertas</span>
+                    <span class="gl">Ofertas</span>
+                </h2>
                 <div class="grid-productos" id="grid-ofertas">
                     {% for producto in ofertas %}
                     <div class="producto-item" 
                          data-id="{{ producto.id }}" 
                          data-titulo="{{ producto.titulo }}" 
-                         data-titulo-gl="{{ producto.titulo_gl|default:'' }}"
                          data-descripcion="{{ producto.descripcion|default:'' }}" 
-                         data-descripcion-gl="{{ producto.descripcion_gl|default:'' }}"
                          data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">
                             {% if producto.imagen %}
@@ -149,7 +150,10 @@
                             {% else %}
                             <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% endif %}
-                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+                            <h3 class="producto-nombre">
+                                <span class="es">{{ producto.titulo }}</span>
+                                <span class="gl">{{ producto.titulo_gl|default:producto.titulo }}</span>
+                            </h3>
                         </a>
                         {% if user.is_staff %}
                         <div class="producto-admin-btns">
@@ -163,15 +167,16 @@
             </section>
 
             <section class="seccion-productos">
-                <h2>Lo mas vendido</h2>
+                <h2>
+                    <span class="es">Lo más vendido</span>
+                    <span class="gl">O máis vendido</span>
+                </h2>
                 <div class="grid-productos" id="grid-vendido">
                     {% for producto in vendidos %}
                     <div class="producto-item" 
                          data-id="{{ producto.id }}" 
                          data-titulo="{{ producto.titulo }}" 
-                         data-titulo-gl="{{ producto.titulo_gl|default:'' }}"
                          data-descripcion="{{ producto.descripcion|default:'' }}" 
-                         data-descripcion-gl="{{ producto.descripcion_gl|default:'' }}"
                          data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">
                             {% if producto.imagen %}
@@ -179,7 +184,10 @@
                             {% else %}
                             <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% endif %}
-                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+                            <h3 class="producto-nombre">
+                                <span class="es">{{ producto.titulo }}</span>
+                                <span class="gl">{{ producto.titulo_gl|default:producto.titulo }}</span>
+                            </h3>
                         </a>
                         {% if user.is_staff %}
                         <div class="producto-admin-btns">
@@ -193,15 +201,16 @@
             </section>
 
             <section class="seccion-productos">
-                <h2>Por tiempo limitado</h2>
+                <h2>
+                    <span class="es">Por tiempo limitado</span>
+                    <span class="gl">Por tempo limitado</span>
+                </h2>
                 <div class="grid-productos" id="grid-limitado">
                     {% for producto in limitado %}
                     <div class="producto-item" 
                          data-id="{{ producto.id }}" 
                          data-titulo="{{ producto.titulo }}" 
-                         data-titulo-gl="{{ producto.titulo_gl|default:'' }}"
                          data-descripcion="{{ producto.descripcion|default:'' }}" 
-                         data-descripcion-gl="{{ producto.descripcion_gl|default:'' }}"
                          data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">
                             {% if producto.imagen %}
@@ -209,7 +218,10 @@
                             {% else %}
                             <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% endif %}
-                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+                            <h3 class="producto-nombre">
+                                <span class="es">{{ producto.titulo }}</span>
+                                <span class="gl">{{ producto.titulo_gl|default:producto.titulo }}</span>
+                            </h3>
                         </a>
                         {% if user.is_staff %}
                         <div class="producto-admin-btns">

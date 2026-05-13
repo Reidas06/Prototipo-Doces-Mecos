@@ -120,26 +120,29 @@
                 container.setAttribute('data-descripcion', product.descripcion || '');
                 container.setAttribute('data-descripcion-gl', product.descripcion_gl || '');
 
-                pTitulo.textContent = product.titulo;
+                pTitulo.innerHTML = `
+                    <span class="es">${product.titulo}</span>
+                    <span class="gl">${product.titulo_gl || product.titulo}</span>
+                `;
                 pImg.src = product.imagen || '{% static "tienda/img/sea-9983074_640.jpg" %}';
                 pImg.alt = product.titulo;
                 
-                // Formatear descripción si existe
+                // Formatear descripción si existe con spans de idioma
                 if (product.descripcion) {
-                    pDesc.innerHTML = product.descripcion.split('\n').map(line => `<p>${line}</p>`).join('');
+                    const esLines = product.descripcion.split('\n').map(line => `<p class="es">${line}</p>`).join('');
+                    const glText = product.descripcion_gl || product.descripcion;
+                    const glLines = glText.split('\n').map(line => `<p class="gl">${line}</p>`).join('');
+                    pDesc.innerHTML = esLines + glLines;
                 } else {
-                    pDesc.innerHTML = "<p>Sin descripción disponible.</p>";
+                    pDesc.innerHTML = `
+                        <p class="es">Sin descripción disponible.</p>
+                        <p class="gl">Sen descrición dispoñible.</p>
+                    `;
                 }
 
-                // Si el idioma actual es gallego, traducir inmediatamente
+                // Aplicar el idioma actual inmediatamente
                 if (typeof translatePage === 'function') {
                     translatePage();
-                } else if (localStorage.getItem('appLang') === 'gl') {
-                    // Fallback si traductor.js aún no expone la función globalmente
-                    if (product.titulo_gl) pTitulo.textContent = product.titulo_gl;
-                    if (product.descripcion_gl) {
-                        pDesc.innerHTML = product.descripcion_gl.split('\n').map(line => `<p>${line}</p>`).join('');
-                    }
                 }
 
                 // Listeners de cantidad

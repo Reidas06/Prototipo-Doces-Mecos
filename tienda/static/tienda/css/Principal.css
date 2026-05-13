@@ -308,3 +308,36 @@ body {
         font-size: 12px;
     }
 }
+
+/*SISTEMA DE TRADUCCION*/
+.gl {
+    display: none;
+}
+
+.es {
+    display: inline;
+}
+
+body.lang-gl .es {
+    display: none;
+}
+
+body.lang-gl .gl {
+    display: inline;
+}
+
+.gl.block {
+    display: none;
+}
+
+.es.block {
+    display: block;
+}
+
+body.lang-gl .es.block {
+    display: none;
+}
+
+body.lang-gl .gl.block {
+    display: block;
+}

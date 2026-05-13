@@ -89,15 +89,16 @@
         <!-- El div categorias-productos se mantiene para que el JS lo encuentre -->
         <div id="categorias-productos">
             <section class="seccion-productos">
-                <h2>Todos los productos</h2>
+                <h2>
+                    <span class="es">Todos los productos</span>
+                    <span class="gl">Todos os produtos</span>
+                </h2>
                 <div class="grid-productos">
                     {% for producto in productos %}
                     <div class="producto-item" 
                          data-id="{{ producto.id }}" 
                          data-titulo="{{ producto.titulo }}" 
-                         data-titulo-gl="{{ producto.titulo_gl|default:'' }}"
                          data-descripcion="{{ producto.descripcion|default:'' }}" 
-                         data-descripcion-gl="{{ producto.descripcion_gl|default:'' }}"
                          data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">
                             {% if producto.imagen %}
@@ -105,7 +106,10 @@
                             {% else %}
                             <img src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="{{ producto.titulo }}" class="producto-img-main">
                             {% endif %}
-                            <h3 class="producto-nombre">{{ producto.titulo }}</h3>
+                            <h3 class="producto-nombre">
+                                <span class="es">{{ producto.titulo }}</span>
+                                <span class="gl">{{ producto.titulo_gl|default:producto.titulo }}</span>
+                            </h3>
                         </a>
                         {% if user.is_staff %}
                         <div class="producto-admin-btns">
