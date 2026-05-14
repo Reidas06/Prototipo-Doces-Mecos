@@ -173,7 +173,7 @@ def api_productos_traducciones(request):
     productos = Producto.objects.filter(in_trash=False)
     traducciones = {}
     for p in productos:
-        traducciones[p.id] = {
+        traducciones[str(p.id)] = {
             'titulo_gl': p.titulo_gl or p.titulo,
             'descripcion_gl': p.descripcion_gl or p.descripcion,
             'titulo_es': p.titulo,
