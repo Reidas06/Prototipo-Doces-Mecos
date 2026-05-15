@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Producto
+from .models import Producto, Cliente
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
@@ -12,3 +12,9 @@ class ProductoAdmin(admin.ModelAdmin):
             'fields': ('titulo', 'titulo_gl', 'descripcion', 'descripcion_gl', 'categoria', 'imagen', 'in_trash')
         }),
     )
+
+@admin.register(Cliente)
+class ClienteAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'apellidos', 'dni', 'email', 'nacionalidad', 'usuario')
+    search_fields = ('nombre', 'apellidos', 'dni', 'email')
+    list_filter = ('nacionalidad',)

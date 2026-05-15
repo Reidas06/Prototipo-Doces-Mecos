@@ -2,7 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Producto
+from .models import Producto, Cliente
+from django.db import IntegrityError
+from django.contrib.auth.models import User
 import json
 from deep_translator import GoogleTranslator
 
@@ -37,6 +39,42 @@ def pago(request):
     return render(request, 'tienda/Pago.html')
 
 def formulario(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        nacionalidad = request.POST.get('nacionalidad')
+        apellidos = request.POST.get('apellidos')
+        dni = request.POST.get('dni')
+        email = request.POST.get('email')
+        direccion = request.POST.get('direccion')
+        telefono = request.POST.get('telefono')
+        codigo_postal = request.POST.get('codigo_postal')
+
+        try:
+            # Create Django User
+            user = User.objects.create_user(username=dni, email=email)
+            user.set_unusable_password()
+            user.save()
+
+            cliente = Cliente(
+                usuario=user,
+                nombre=nombre,
+                apellidos=apellidos,
+                nacionalidad=nacionalidad,
+                dni=dni,
+                email=email,
+                direccion=direccion,
+                telefono=telefono,
+                codigo_postal=codigo_postal
+            )
+            cliente.save()
+            # Manda que todo esta correcto al HTML
+            return render(request, 'tienda/Formulario.html', {'success': True})
+        except IntegrityError:
+            # Maneja que no haya duplicidades en el DNI
+            return render(request, 'tienda/Formulario.html', {
+                'error': 'Ya existe una cuenta registrada con este DNI.'
+            })
+            
     return render(request, 'tienda/Formulario.html')
 
 # --- API PRODUCTOS ---

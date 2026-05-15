@@ -45,7 +45,21 @@
                 <i class="fa-solid fa-user"></i>
             </div>
             <h2>Sign-In</h2>
-            <form class="form-grid">
+            
+            {% if success %}
+                <div class="alert alert-success" style="color: green; margin-bottom: 15px; text-align: center;">
+                    ¡Cuenta creada exitosamente!
+                </div>
+            {% endif %}
+            
+            {% if error %}
+                <div class="alert alert-danger" style="color: red; margin-bottom: 15px; text-align: center;">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form class="form-grid" method="POST" action="{% url 'formulario' %}">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
                     <input type="text" id="nombre" name="nombre" required>
@@ -64,12 +78,8 @@
                     <input type="text" id="apellidos" name="apellidos" required>
                 </div>
                 <div class="form-group">
-                    <label for="localidad">Localidad</label>
-                    <select id="localidad" name="localidad" required>
-                        <option value="">Selecciona</option>
-                        <option value="Mens">Mens</option>
-                        <option value="Otro">Otro</option>
-                    </select>
+                    <label for="dni">DNI</label>
+                    <input type="text" id="dni" name="dni" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
