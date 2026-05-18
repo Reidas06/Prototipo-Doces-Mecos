@@ -79,108 +79,83 @@ def formulario(request):
 
 # --- API PRODUCTOS ---
 
-@staff_member_required
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import ProductoSerializer
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
 def api_crear_producto(request):
-    if request.method == 'POST':
-        titulo = request.POST.get('titulo', '')
-        descripcion = request.POST.get('descripcion', '')
-        categoria = request.POST.get('categoria', 'ninguna')
-        imagen = request.FILES.get('imagen', None)
-        
-        producto = Producto(
-            titulo=titulo,
-            descripcion=descripcion,
-            categoria=categoria,
-        )
-        if imagen:
-            producto.imagen = imagen
-        producto.save() # El método save maneja la traducción automática
-        
-        return JsonResponse({
+    serializer = ProductoSerializer(data=request.data)
+    if serializer.is_valid():
+        producto = serializer.save()
+        return Response({
             'status': 'ok',
             'id': producto.id,
             'titulo': producto.titulo,
             'titulo_gl': producto.titulo_gl,
             'categoria': producto.categoria,
         })
-    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+    return Response({'status': 'error', 'message': 'Datos inválidos', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
-@staff_member_required
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
 def api_producto_editar(request, pk):
-    if request.method == 'POST':
-        try:
-            producto = Producto.objects.get(pk=pk)
-            # Manejamos tanto FormData como JSON
-            if request.content_type == 'application/json':
-                data = json.loads(request.body)
-                producto.titulo = data.get('titulo', producto.titulo)
-                producto.descripcion = data.get('descripcion', producto.descripcion)
-                producto.categoria = data.get('categoria', producto.categoria)
-                # Opcional: permitir editar las traducciones directamente desde la API
-                producto.titulo_gl = data.get('titulo_gl', producto.titulo_gl)
-                producto.descripcion_gl = data.get('descripcion_gl', producto.descripcion_gl)
-            else:
-                producto.titulo = request.POST.get('titulo', producto.titulo)
-                producto.descripcion = request.POST.get('descripcion', producto.descripcion)
-                producto.categoria = request.POST.get('categoria', producto.categoria)
-                producto.titulo_gl = request.POST.get('titulo_gl', producto.titulo_gl)
-                producto.descripcion_gl = request.POST.get('descripcion_gl', producto.descripcion_gl)
-                
-                if 'imagen' in request.FILES:
-                    producto.imagen = request.FILES['imagen']
-            
-            producto.save()
-            return JsonResponse({'status': 'ok', 'success': True})
-        except Producto.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
-    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+    try:
+        producto = Producto.objects.get(pk=pk)
+    except Producto.DoesNotExist:
+        return Response({'status': 'error', 'message': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
+    # 'partial=True' permite actualizaciones parciales de los campos
+    serializer = ProductoSerializer(producto, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'status': 'ok', 'success': True})
+    return Response({'status': 'error', 'message': 'Datos inválidos', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
-@staff_member_required
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
 def api_producto_soft_delete(request, pk):
     """Envía el producto a la papelera."""
-    if request.method == 'POST':
-        try:
-            producto = Producto.objects.get(pk=pk)
-            producto.in_trash = True
-            producto.save()
-            return JsonResponse({'status': 'ok', 'success': True})
-        except Producto.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
-    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+    try:
+        producto = Producto.objects.get(pk=pk)
+        producto.in_trash = True
+        producto.save()
+        return Response({'status': 'ok', 'success': True})
+    except Producto.DoesNotExist:
+        return Response({'status': 'error', 'message': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-@csrf_exempt
-@staff_member_required
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
 def api_producto_restore(request, pk):
     """Restaura el producto de la papelera."""
-    if request.method == 'POST':
-        try:
-            producto = Producto.objects.get(pk=pk)
-            producto.in_trash = False
-            producto.save()
-            return JsonResponse({'status': 'ok', 'success': True})
-        except Producto.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
-    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+    try:
+        producto = Producto.objects.get(pk=pk)
+        producto.in_trash = False
+        producto.save()
+        return Response({'status': 'ok', 'success': True})
+    except Producto.DoesNotExist:
+        return Response({'status': 'error', 'message': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-@csrf_exempt
-@staff_member_required
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
 def api_producto_hard_delete(request, pk):
     """Elimina permanentemente el producto."""
-    if request.method == 'POST':
-        try:
-            producto = Producto.objects.get(pk=pk)
-            producto.delete()
-            return JsonResponse({'status': 'ok', 'success': True})
-        except Producto.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
-    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+    try:
+        producto = Producto.objects.get(pk=pk)
+        producto.delete()
+        return Response({'status': 'ok', 'success': True})
+    except Producto.DoesNotExist:
+        return Response({'status': 'error', 'message': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-@staff_member_required
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
 def api_producto_trash_list(request):
     """Devuelve la lista de productos en la papelera."""
     productos_trash = Producto.objects.filter(in_trash=True)
+    # Mantenemos el formato exacto devuelto por la API anterior para no romper el frontend
     results = []
     for p in productos_trash:
         results.append({
@@ -190,22 +165,21 @@ def api_producto_trash_list(request):
             'imagen': p.imagen.url if p.imagen else None,
             'categoria': p.categoria,
         })
-    return JsonResponse({'results': results, 'success': True})
+    return Response({'results': results, 'success': True})
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def api_producto_detalle(request, pk):
     """Devuelve los detalles de un producto específico."""
-    producto = get_object_or_404(Producto, pk=pk)
-    return JsonResponse({
-        'id': producto.id,
-        'titulo': producto.titulo,
-        'titulo_gl': producto.titulo_gl,
-        'descripcion': producto.descripcion,
-        'descripcion_gl': producto.descripcion_gl,
-        'categoria': producto.categoria,
-        'imagen': producto.imagen.url if producto.imagen else None,
-        'in_trash': producto.in_trash
-    })
+    try:
+        producto = Producto.objects.get(pk=pk)
+        serializer = ProductoSerializer(producto)
+        return Response(serializer.data)
+    except Producto.DoesNotExist:
+        return Response({'status': 'error', 'message': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def api_productos_traducciones(request):
     """Devuelve un mapa de traducciones para todos los productos activos."""
     productos = Producto.objects.filter(in_trash=False)
@@ -217,22 +191,20 @@ def api_productos_traducciones(request):
             'titulo_es': p.titulo,
             'descripcion_es': p.descripcion
         }
-    return JsonResponse({'traducciones': traducciones})
+    return Response({'traducciones': traducciones})
 
-@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def api_translate(request):
-    """API para traducir texto genérico (mantenida por compatibilidad si es necesaria)."""
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            text = data.get('text')
-            target_lang = data.get('target', 'gl')
-            
-            if not text:
-                return JsonResponse({'status': 'error', 'message': 'No text provided'}, status=400)
-            
-            translated = GoogleTranslator(source='auto', target=target_lang).translate(text)
-            return JsonResponse({'status': 'ok', 'translated': translated})
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
+    """API para traducir texto genérico."""
+    try:
+        text = request.data.get('text')
+        target_lang = request.data.get('target', 'gl')
+        
+        if not text:
+            return Response({'status': 'error', 'message': 'No text provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        translated = GoogleTranslator(source='auto', target=target_lang).translate(text)
+        return Response({'status': 'ok', 'translated': translated})
+    except Exception as e:
+        return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
