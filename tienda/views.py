@@ -7,6 +7,11 @@ from django.db import IntegrityError
 from django.contrib.auth.models import User
 import json
 from deep_translator import GoogleTranslator
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import ProductoSerializer
 
 def inicio(request):
     return render(request, 'tienda/Principal.html')
@@ -78,12 +83,6 @@ def formulario(request):
     return render(request, 'tienda/Formulario.html')
 
 # --- API PRODUCTOS ---
-
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser, AllowAny
-from rest_framework.response import Response
-from rest_framework import status
-from .serializers import ProductoSerializer
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])

@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("Doces&Mecos Product Management - Style: Arrivelo");
+    console.log("Doces&Mecos Product Management");
 
     // --- Referencias ---
     const addModal = document.getElementById('add-news-modal');
     const editModal = document.getElementById('edit-news-modal');
-    
+
     const btnAddProduct = document.getElementById('btn-add-news');
     const btnTrashView = document.getElementById('btn-trash-view');
-    
+
     const btnCloseAdd = document.getElementById('btn-close-modal');
     const btnCloseEdit = document.getElementById('btn-close-edit');
 
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return cookieValue;
     }
 
-    // --- Helper UI (No HTML injection) ---
+    // --- Helper UI ---
     function createProductElement(item, isTrash = false) {
         const div = document.createElement('div');
         div.className = 'producto-item';
@@ -76,13 +76,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             actions.appendChild(restoreBtn);
             actions.appendChild(hardDeleteBtn);
-            
+
             div.appendChild(img);
             div.appendChild(title);
             div.appendChild(actions);
         } else {
             const link = document.createElement('a');
-            link.href = '#'; 
+            link.href = '#';
             link.className = 'producto-enlace';
             link.appendChild(img);
             link.appendChild(title);
@@ -218,12 +218,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item) {
                         const oldCat = item.dataset.categoria;
                         const newCat = document.getElementById('e-categoria').value;
-                        
+
                         item.dataset.titulo = document.getElementById('e-titulo').value;
                         item.dataset.descripcion = document.getElementById('e-descripcion').value;
                         item.dataset.categoria = newCat;
                         item.querySelector('.producto-nombre').textContent = item.dataset.titulo;
-                        
+
                         if (data.producto && data.producto.imagen) {
                             item.querySelector('.producto-img-main').src = data.producto.imagen;
                         }

@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Traductor Doces&Mecos iniciado (Bulk Fetch & Cache Mode)");
-    
+    console.log("Traductor Doces&Mecos iniciado");
+
     const langES = document.getElementById('lang-es');
     const langGL = document.getElementById('lang-gl');
-    
+
     let currentLang = localStorage.getItem('appLang') || 'es';
     let translationsCache = null;
 
@@ -57,11 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const applyTranslations = () => {
         console.log(`Aplicando idioma: ${currentLang}`);
-        
+
         // 1. Traducir productos en catálogo
         const products = document.querySelectorAll('.producto-item');
         console.log(`Buscando traducciones para ${products.length} elementos en el DOM.`);
-        
+
         products.forEach(el => {
             const id = el.getAttribute('data-id');
             const nameEl = el.querySelector('.producto-nombre');
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const h2 = sec.querySelector('h2');
             if (!h2) return;
             const gridId = sec.querySelector('.grid-productos')?.id;
-            
+
             if (gridId === 'grid-ofertas') h2.textContent = staticTranslations[currentLang].h2_ofertas;
             else if (gridId === 'grid-vendido') h2.textContent = staticTranslations[currentLang].h2_vendido;
             else if (gridId === 'grid-limitado') h2.textContent = staticTranslations[currentLang].h2_limitado;
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentLang = lang;
         localStorage.setItem('appLang', lang);
         updateUI();
-        
+
         if (lang === 'gl' && !translationsCache) {
             const success = await fetchTranslations();
             if (success) applyTranslations();
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar
     updateUI();
-    
+
     // Si el idioma es Gallego, cargamos el cache inmediatamente
     if (currentLang === 'gl') {
         fetchTranslations().then(success => {
