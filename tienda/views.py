@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProductoSerializer
+from django.contrib.auth import authenticate, login, logout
 
 def inicio(request):
     return render(request, 'tienda/Principal.html')
@@ -53,11 +54,18 @@ def formulario(request):
         direccion = request.POST.get('direccion')
         telefono = request.POST.get('telefono')
         codigo_postal = request.POST.get('codigo_postal')
+        password = request.POST.get('password')
+        repeat_password = request.POST.get('repeat_password')
+
+        if not password or password != repeat_password:
+            return render(request, 'tienda/Formulario.html', {
+                'error': 'Las contraseñas no coinciden o están vacías.'
+            })
 
         try:
             # Create Django User
             user = User.objects.create_user(username=dni, email=email)
-            user.set_unusable_password()
+            user.set_password(password)
             user.save()
 
             cliente = Cliente(
@@ -72,8 +80,12 @@ def formulario(request):
                 codigo_postal=codigo_postal
             )
             cliente.save()
+            
+            # Iniciar sesión automáticamente
+            login(request, user)
+            
             # Manda que todo esta correcto al HTML
-            return render(request, 'tienda/Formulario.html', {'success': True})
+            return render(request, 'tienda/Formulario.html', {'success': '¡Cuenta creada y sesión iniciada exitosamente!'})
         except IntegrityError:
             # Maneja que no haya duplicidades en el DNI
             return render(request, 'tienda/Formulario.html', {
@@ -81,6 +93,24 @@ def formulario(request):
             })
             
     return render(request, 'tienda/Formulario.html')
+
+def iniciar_sesion(request):
+    if request.method == 'POST':
+        dni = request.POST.get('login_username')
+        password = request.POST.get('login_password')
+        user = authenticate(request, username=dni, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('formulario')
+        else:
+            return render(request, 'tienda/Formulario.html', {
+                'login_error': 'DNI o contraseña incorrectos.'
+            })
+    return redirect('formulario')
+
+def cerrar_sesion(request):
+    logout(request)
+    return redirect('formulario')
 
 # --- API PRODUCTOS ---
 

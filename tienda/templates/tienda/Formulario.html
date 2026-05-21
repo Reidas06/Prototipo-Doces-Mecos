@@ -43,67 +43,120 @@
         </div>
     </header>
 
-    <main class="principal">
-        <div class="form-principal">
+    <main class="principal" style="display: flex; justify-content: center;">
+        {% if request.user.is_authenticated %}
+        <div class="form-principal" style="text-align: center; padding: 40px; min-width: 300px;">
             <div class="form-avatar">
-                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-user-check"></i>
             </div>
-            <h2>Sign-In</h2>
-            
-            {% if success %}
-                <div class="alert alert-success" style="color: green; margin-bottom: 15px; text-align: center;">
-                    ¡Cuenta creada exitosamente!
-                </div>
-            {% endif %}
-            
-            {% if error %}
-                <div class="alert alert-danger" style="color: red; margin-bottom: 15px; text-align: center;">
-                    {{ error }}
-                </div>
-            {% endif %}
-
-            <form class="form-grid" method="POST" action="{% url 'formulario' %}">
+            <h2>¡Hola, {{ request.user.username }}!</h2>
+            <p style="margin: 20px 0;">Has iniciado sesión correctamente.</p>
+            <form action="{% url 'cerrar_sesion' %}" method="POST">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" name="nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="nacionalidad">Nacionalidad</label>
-                    <select id="nacionalidad" name="nacionalidad" required>
-                        <option value="">Selecciona</option>
-                        <option value="Español">Español</option>
-                        <option value="Portugués">Portugués</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="apellidos">Apellidos</label>
-                    <input type="text" id="apellidos" name="apellidos" required>
-                </div>
-                <div class="form-group">
-                    <label for="dni">DNI</label>
-                    <input type="text" id="dni" name="dni" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Correo electrónico</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="direccion">Dirección</label>
-                    <input type="text" id="direccion" name="direccion" required>
-                </div>
-                <div class="form-group">
-                    <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono" name="telefono" required>
-                </div>
-                <div class="form-group">
-                    <label for="codigo_postal">Código Postal</label>
-                    <input type="text" id="codigo_postal" name="codigo_postal" required>
-                </div>
-                <button type="submit" class="enviar">Enviar</button>
+                <button type="submit" class="enviar" style="background-color: lightpink; color: black; max-width: 200px; margin: 0 auto;">Cerrar Sesión</button>
             </form>
         </div>
+        {% else %}
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; max-width: 1200px; padding: 0 20px;">
+        
+            <!-- FORMULARIO DE INICIO DE SESIÓN -->
+            <div class="form-principal" style="flex: 1; min-width: 300px; max-width: 400px; margin-top: 0; align-self: flex-start;">
+                <div class="form-avatar">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </div>
+                <h2>Iniciar Sesión</h2>
+                
+                {% if login_error %}
+                    <div class="alert alert-danger" style="color: red; margin-bottom: 15px; text-align: center;">
+                        {{ login_error }}
+                    </div>
+                {% endif %}
+
+                <form class="form-grid" style="display: flex; flex-direction: column;" method="POST" action="{% url 'iniciar_sesion' %}">
+                    {% csrf_token %}
+                    <div class="form-group" style="width: 100%;">
+                        <label for="login_username">Nombre de Usuario</label>
+                        <input type="text" id="login_username" name="login_username" required>
+                    </div>
+                    <div class="form-group" style="width: 100%;">
+                        <label for="login_password">Contraseña</label>
+                        <input type="password" id="login_password" name="login_password" required>
+                    </div>
+                    <button type="submit" class="enviar" style="margin-top: 15px; background-color: lightblue; color: black;">Entrar</button>
+                </form>
+            </div>
+
+            <!-- FORMULARIO DE REGISTRO -->
+            <div class="form-principal" style="flex: 2; min-width: 300px; margin-top: 0;">
+                <div class="form-avatar">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h2>Registrarse</h2>
+                
+                {% if success %}
+                    <div class="alert alert-success" style="color: green; margin-bottom: 15px; text-align: center;">
+                        {{ success }}
+                    </div>
+                {% endif %}
+                
+                {% if error %}
+                    <div class="alert alert-danger" style="color: red; margin-bottom: 15px; text-align: center;">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <form class="form-grid" method="POST" action="{% url 'formulario' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nacionalidad">Nacionalidad</label>
+                        <select id="nacionalidad" name="nacionalidad" required>
+                            <option value="">Selecciona</option>
+                            <option value="Español">Español</option>
+                            <option value="Portugués">Portugués</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" name="apellidos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dni">DNI</label>
+                        <input type="text" id="dni" name="dni" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección</label>
+                        <input type="text" id="direccion" name="direccion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigo_postal">Código Postal</label>
+                        <input type="text" id="codigo_postal" name="codigo_postal" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="repeat_password">Repetir Contraseña</label>
+                        <input type="password" id="repeat_password" name="repeat_password" required>
+                    </div>
+                    <button type="submit" class="enviar" style="grid-column: 1 / -1; width: 100%; max-width: 250px; justify-self: center; background-color: lightblue; color: black;">Registrarse</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
     </main>
 
     <footer class="pie">

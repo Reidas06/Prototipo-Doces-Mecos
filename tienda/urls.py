@@ -9,6 +9,8 @@ urlpatterns = [
     path('carrito/', views.carrito, name='carrito'),
     path('pago/', views.pago, name='pago'),
     path('formulario/', views.formulario, name='formulario'),
+    path('iniciar-sesion/', views.iniciar_sesion, name='iniciar_sesion'),
+    path('cerrar-sesion/', views.cerrar_sesion, name='cerrar_sesion'),
     
     # API PRODUCTOS
     path('api/producto/crear/', views.api_crear_producto, name='api_crear_producto'),
