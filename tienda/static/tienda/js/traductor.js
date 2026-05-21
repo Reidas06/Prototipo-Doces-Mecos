@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'h2_todos': 'Todos os produtos'
         },
         'es': {
-            'slogan': 'Doce alegría en cada bocado!',
+            'slogan': 'Dulce alegría en cada bocado!',
             'acerca_h4': 'Acerca de nosotros',
             'donde_h4': 'Dónde nos puedes encontrar',
             'desc_1': 'Nuestra pasión es endulzar la vida de pequeños y grandes, ofrecemos una amplia variedad de dulces y golosinas que despiertan recuerdos de la infancia. Tenemos desde caramelos clásicos hasta las últimas novedades. Nuestra misión es que el cliente se vaya con una sonrisa en la cara como la que nosotros tenemos cuando entran.',

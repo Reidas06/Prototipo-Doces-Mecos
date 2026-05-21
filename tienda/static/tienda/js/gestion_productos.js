@@ -208,11 +208,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
                 const res = await fetch(`/api/producto/editar/${id}/`, {
-                    method: 'POST',
-                    body: new FormData(formEdit),
-                    headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                    method: 'PUT', // Método PUT estricto
+                    body: new FormData(formEdit), // Soporta imágenes sin problema
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                        // IMPORTANTE: NO pongas 'Content-Type' aquí. 
+                    }
                 });
+
+                // Añadimos esto para depurar qué responde DRF si algo falla
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error("Error del servidor:", res.status, errorText);
+                    throw new Error(`Error HTTP: ${res.status}`);
+                }
+
                 const data = await res.json();
+
                 if (data.status === 'ok') {
                     const item = document.querySelector(`.producto-item[data-id="${id}"]`);
                     if (item) {
@@ -228,7 +240,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             item.querySelector('.producto-img-main').src = data.producto.imagen;
                         }
 
-                        // Si la categoría cambió, mover el item
                         if (oldCat !== newCat) {
                             const targetGridId = categoryGridMap[newCat];
                             const targetGrid = document.getElementById(targetGridId);
@@ -238,9 +249,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                     closeModals();
+                } else {
+                    alert("Error al actualizar: " + (data.mensaje || "Revisa los datos"));
                 }
             } catch (error) {
-                alert("Error de conexión.");
+                console.error("Error capturado:", error);
+                alert("Error de conexión o el servidor rechazó la petición.");
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;

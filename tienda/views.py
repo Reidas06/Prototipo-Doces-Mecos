@@ -99,7 +99,7 @@ def api_crear_producto(request):
         })
     return Response({'status': 'error', 'message': 'Datos inválidos', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([IsAdminUser])
 def api_producto_editar(request, pk):
     try:
@@ -111,7 +111,12 @@ def api_producto_editar(request, pk):
     serializer = ProductoSerializer(producto, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
-        return Response({'status': 'ok', 'success': True})
+        # actualizar la imagen y los textos sin recargar la página.
+        return Response({
+            'status': 'ok', 
+            'success': True,
+            'producto': serializer.data  # Esto alimenta a tu "data.producto.imagen" en JS
+        })
     return Response({'status': 'error', 'message': 'Datos inválidos', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
