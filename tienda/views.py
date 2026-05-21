@@ -115,7 +115,7 @@ def api_producto_editar(request, pk):
         return Response({
             'status': 'ok', 
             'success': True,
-            'producto': serializer.data  # Esto alimenta a tu "data.producto.imagen" en JS
+            'producto': serializer.data
         })
     return Response({'status': 'error', 'message': 'Datos inválidos', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -143,7 +143,7 @@ def api_producto_restore(request, pk):
     except Producto.DoesNotExist:
         return Response({'status': 'error', 'message': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @permission_classes([IsAdminUser])
 def api_producto_hard_delete(request, pk):
     """Elimina permanentemente el producto."""
@@ -153,7 +153,6 @@ def api_producto_hard_delete(request, pk):
         return Response({'status': 'ok', 'success': True})
     except Producto.DoesNotExist:
         return Response({'status': 'error', 'message': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def api_producto_trash_list(request):

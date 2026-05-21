@@ -208,11 +208,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
                 const res = await fetch(`/api/producto/editar/${id}/`, {
-                    method: 'PUT', // Método PUT estricto
-                    body: new FormData(formEdit), // Soporta imágenes sin problema
+                    method: 'PUT',
+                    body: new FormData(formEdit),
                     headers: {
                         'X-CSRFToken': getCookie('csrftoken')
-                        // IMPORTANTE: NO pongas 'Content-Type' aquí. 
                     }
                 });
 
@@ -290,6 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    //Restaurar y eliminar permanentemente
     if (trashGrid) {
         trashGrid.addEventListener('click', async (e) => {
             const btn = e.target.closest('.btn-restore, .btn-hard-delete');
@@ -300,16 +300,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
                 const action = isRestore ? 'restore' : 'hard_delete';
+                const reqMethod = isRestore ? 'POST' : 'DELETE';
+
                 const res = await fetch(`/api/producto/${action}/${btn.dataset.id}/`, {
-                    method: 'POST',
+                    method: reqMethod,
                     headers: { 'X-CSRFToken': getCookie('csrftoken') }
                 });
+
                 if ((await res.json()).success) {
                     item.remove();
                     if (isRestore && !window.location.href.includes('todos_productos')) {
                         // En la página principal, recargamos para que aparezca en su categoría
-                        // o podríamos intentar moverlo si supiéramos la categoría, 
-                        // pero restore no suele devolver el objeto.
                         window.location.reload();
                     }
                 }
