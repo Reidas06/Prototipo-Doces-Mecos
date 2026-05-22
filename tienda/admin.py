@@ -15,6 +15,6 @@ class ProductoAdmin(admin.ModelAdmin):
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'apellidos', 'dni', 'email', 'nacionalidad', 'usuario')
-    search_fields = ('nombre', 'apellidos', 'dni', 'email')
+    list_display = ('nombre_usuario', 'nombre', 'dni', 'email', 'nacionalidad', 'usuario')
+    search_fields = ('nombre_usuario', 'nombre', 'dni', 'email')
     list_filter = ('nacionalidad',)

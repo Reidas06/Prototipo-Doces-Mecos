@@ -47,8 +47,8 @@ def pago(request):
 def formulario(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
+        nombre_usuario = request.POST.get('nombre_usuario')
         nacionalidad = request.POST.get('nacionalidad')
-        apellidos = request.POST.get('apellidos')
         dni = request.POST.get('dni')
         email = request.POST.get('email')
         direccion = request.POST.get('direccion')
@@ -64,16 +64,17 @@ def formulario(request):
 
         try:
             # Create Django User
-            user = User.objects.create_user(username=dni, email=email)
+            user = User.objects.create_user(username=nombre_usuario, email=email)
             user.set_password(password)
             user.save()
 
             cliente = Cliente(
                 usuario=user,
                 nombre=nombre,
-                apellidos=apellidos,
                 nacionalidad=nacionalidad,
                 dni=dni,
+                nombre_usuario=nombre_usuario,
+                password=password,
                 email=email,
                 direccion=direccion,
                 telefono=telefono,
@@ -87,24 +88,24 @@ def formulario(request):
             # Manda que todo esta correcto al HTML
             return render(request, 'tienda/Formulario.html', {'success': '¡Cuenta creada y sesión iniciada exitosamente!'})
         except IntegrityError:
-            # Maneja que no haya duplicidades en el DNI
+            # Maneja que no haya duplicidades
             return render(request, 'tienda/Formulario.html', {
-                'error': 'Ya existe una cuenta registrada con este DNI.'
+                'error': 'Ya existe una cuenta con este DNI o Nombre de Usuario.'
             })
             
     return render(request, 'tienda/Formulario.html')
 
 def iniciar_sesion(request):
     if request.method == 'POST':
-        dni = request.POST.get('login_username')
+        login_username = request.POST.get('login_username')
         password = request.POST.get('login_password')
-        user = authenticate(request, username=dni, password=password)
+        user = authenticate(request, username=login_username, password=password)
         if user is not None:
             login(request, user)
             return redirect('formulario')
         else:
             return render(request, 'tienda/Formulario.html', {
-                'login_error': 'DNI o contraseña incorrectos.'
+                'login_error': 'Nombre de usuario o contraseña incorrectos.'
             })
     return redirect('formulario')
 
