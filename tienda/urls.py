@@ -22,4 +22,7 @@ urlpatterns = [
     path('api/producto/<int:pk>/', views.api_producto_detalle, name='api_producto_detalle'),
     path('api/traducciones/', views.api_productos_traducciones, name='api_traducciones'),
     path('api/translate/', views.api_translate, name='api_translate'),
+    
+    # API CLIENTES
+    path('api/cliente/password/', views.api_cambiar_password, name='api_cambiar_password'),
 ]

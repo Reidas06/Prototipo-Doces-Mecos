@@ -4,15 +4,15 @@
 
 const CART_STORAGE_KEY = 'doces_e_mecos_cart';
 
-// Obtener el carrito de localStorage
+// Obtener el carrito de sessionStorage
 function getCart() {
-    const cart = localStorage.getItem(CART_STORAGE_KEY);
+    const cart = sessionStorage.getItem(CART_STORAGE_KEY);
     return cart ? JSON.parse(cart) : [];
 }
 
-// Guardar el carrito en localStorage
+// Guardar el carrito en sessionStorage
 function saveCart(cart) {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
 }
 
 // Añadir producto al carrito

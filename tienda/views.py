@@ -59,7 +59,8 @@ def formulario(request):
 
         if not password or password != repeat_password:
             return render(request, 'tienda/Formulario.html', {
-                'error': 'Las contraseñas no coinciden o están vacías.'
+                'error': 'Las contraseñas no coinciden o están vacías.',
+                'old_data': request.POST
             })
 
         try:
@@ -90,7 +91,8 @@ def formulario(request):
         except IntegrityError:
             # Maneja que no haya duplicidades
             return render(request, 'tienda/Formulario.html', {
-                'error': 'Ya existe una cuenta con este DNI o Nombre de Usuario.'
+                'error': 'Ya existe una cuenta con este DNI o Nombre de Usuario.',
+                'old_data': request.POST
             })
             
     return render(request, 'tienda/Formulario.html')
@@ -105,7 +107,8 @@ def iniciar_sesion(request):
             return redirect('formulario')
         else:
             return render(request, 'tienda/Formulario.html', {
-                'login_error': 'Nombre de usuario o contraseña incorrectos.'
+                'login_error': 'Nombre de usuario o contraseña incorrectos.',
+                'login_username': login_username
             })
     return redirect('formulario')
 
@@ -242,3 +245,35 @@ def api_translate(request):
         return Response({'status': 'ok', 'translated': translated})
     except Exception as e:
         return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# --- API CLIENTES ---
+
+@api_view(['PATCH'])
+@permission_classes([AllowAny])
+def api_cambiar_password(request):
+    nombre_usuario = request.data.get('nombre_usuario')
+    dni = request.data.get('dni')
+    nueva_password = request.data.get('nueva_password')
+    repetir_password = request.data.get('repetir_password')
+
+    if not all([nombre_usuario, dni, nueva_password, repetir_password]):
+        return Response({'status': 'error', 'msg': 'Faltan datos obligatorios.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if nueva_password != repetir_password:
+        return Response({'status': 'error', 'msg': 'Las contraseñas no coinciden.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        cliente = Cliente.objects.get(nombre_usuario=nombre_usuario, dni=dni)
+        # Update custom Cliente password
+        cliente.password = nueva_password
+        cliente.save()
+
+        # Update Django User password
+        user = cliente.usuario
+        if user:
+            user.set_password(nueva_password)
+            user.save()
+
+        return Response({'status': 'ok', 'msg': 'Contraseña actualizada de manera exitosa.'}, status=status.HTTP_200_OK)
+    except Cliente.DoesNotExist:
+        return Response({'status': 'error', 'msg': 'El usuario o DNI proporcionado no es correcto.'}, status=status.HTTP_404_NOT_FOUND)

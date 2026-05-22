@@ -50,57 +50,61 @@
                 <i class="fa-solid fa-user-check"></i>
             </div>
             <h2>¡Hola, {{ request.user.username }}!</h2>
-            <p style="margin: 20px 0;">Has iniciado sesión correctamente.</p>
+            <p class="txt-margin-vertical">Has iniciado sesión correctamente.</p>
             <form action="{% url 'cerrar_sesion' %}" method="POST">
                 {% csrf_token %}
-                <button type="submit" class="enviar" style="background-color: lightpink; color: black; max-width: 200px; margin: 0 auto;">Cerrar Sesión</button>
+                <button type="submit" class="enviar btn-cerrar-sesion">Cerrar Sesión</button>
             </form>
         </div>
         {% else %}
-        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; max-width: 1200px; padding: 0 20px;">
+        <div class="form-wrapper-container">
         
             <!-- FORMULARIO DE INICIO DE SESIÓN -->
-            <div class="form-principal" style="flex: 1; min-width: 300px; max-width: 400px; margin-top: 0; align-self: flex-start;">
+            <div id="login-box" class="form-principal login-box">
                 <div class="form-avatar">
                     <i class="fa-solid fa-right-to-bracket"></i>
                 </div>
                 <h2>Iniciar Sesión</h2>
                 
                 {% if login_error %}
-                    <div class="alert alert-danger" style="color: red; margin-bottom: 15px; text-align: center;">
+                    <div class="alert alert-danger">
                         {{ login_error }}
                     </div>
                 {% endif %}
 
-                <form class="form-grid" style="display: flex; flex-direction: column;" method="POST" action="{% url 'iniciar_sesion' %}">
+                <form class="form-grid form-flex-column" method="POST" action="{% url 'iniciar_sesion' %}">
                     {% csrf_token %}
-                    <div class="form-group" style="width: 100%;">
+                    <div class="form-group full-width-group">
                         <label for="login_username">Nombre de Usuario</label>
-                        <input type="text" id="login_username" name="login_username" required>
+                        <input type="text" id="login_username" name="login_username" value="{{ login_username|default:'' }}" required>
                     </div>
-                    <div class="form-group" style="width: 100%;">
+                    <div class="form-group full-width-group">
                         <label for="login_password">Contraseña</label>
                         <input type="password" id="login_password" name="login_password" required>
                     </div>
-                    <button type="submit" class="enviar" style="margin-top: 15px; background-color: lightblue; color: black;">Entrar</button>
+                    <button type="submit" class="enviar">Entrar</button>
                 </form>
+
+                <p class="link-container">
+                    <a href="#" id="toggle-password-form" class="link-lightblue">¿Has olvidado o quieres cambiar tu contraseña?</a>
+                </p>
             </div>
 
             <!-- FORMULARIO DE REGISTRO -->
-            <div class="form-principal" style="flex: 2; min-width: 300px; margin-top: 0;">
+            <div id="register-box" class="form-principal register-box">
                 <div class="form-avatar">
                     <i class="fa-solid fa-user-plus"></i>
                 </div>
                 <h2>Registrarse</h2>
                 
                 {% if success %}
-                    <div class="alert alert-success" style="color: green; margin-bottom: 15px; text-align: center;">
+                    <div class="alert alert-success">
                         {{ success }}
                     </div>
                 {% endif %}
                 
                 {% if error %}
-                    <div class="alert alert-danger" style="color: red; margin-bottom: 15px; text-align: center;">
+                    <div class="alert alert-danger">
                         {{ error }}
                     </div>
                 {% endif %}
@@ -109,40 +113,40 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="nombre">Nombre y Apellidos</label>
-                        <input type="text" id="nombre" name="nombre" required>
+                        <input type="text" id="nombre" name="nombre" value="{{ old_data.nombre|default:'' }}" required>
                     </div>
                     <div class="form-group">
                         <label for="nacionalidad">Nacionalidad</label>
                         <select id="nacionalidad" name="nacionalidad" required>
                             <option value="">Selecciona</option>
-                            <option value="Español">Española</option>
-                            <option value="Portugués">Portugués</option>
-                            <option value="Otro">Otro</option>
+                            <option value="Español" {% if old_data.nacionalidad == 'Español' %}selected{% endif %}>Española</option>
+                            <option value="Portugués" {% if old_data.nacionalidad == 'Portugués' %}selected{% endif %}>Portugués</option>
+                            <option value="Otro" {% if old_data.nacionalidad == 'Otro' %}selected{% endif %}>Otro</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="nombre_usuario">Nombre de usuario</label>
-                        <input type="text" id="nombre_usuario" name="nombre_usuario" required>
+                        <input type="text" id="nombre_usuario" name="nombre_usuario" value="{{ old_data.nombre_usuario|default:'' }}" required>
                     </div>
                     <div class="form-group">
                         <label for="dni">DNI</label>
-                        <input type="text" id="dni" name="dni" required>
+                        <input type="text" id="dni" name="dni" value="{{ old_data.dni|default:'' }}" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Correo electrónico</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" value="{{ old_data.email|default:'' }}" required>
                     </div>
                     <div class="form-group">
                         <label for="telefono">Teléfono</label>
-                        <input type="tel" id="telefono" name="telefono" required>
+                        <input type="tel" id="telefono" name="telefono" value="{{ old_data.telefono|default:'' }}" required>
                     </div>
                     <div class="form-group">
                         <label for="direccion">Dirección</label>
-                        <input type="text" id="direccion" name="direccion" required>
+                        <input type="text" id="direccion" name="direccion" value="{{ old_data.direccion|default:'' }}" required>
                     </div>
                     <div class="form-group">
                         <label for="codigo_postal">Código Postal</label>
-                        <input type="text" id="codigo_postal" name="codigo_postal" required>
+                        <input type="text" id="codigo_postal" name="codigo_postal" value="{{ old_data.codigo_postal|default:'' }}" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Contraseña</label>
@@ -152,11 +156,121 @@
                         <label for="repeat_password">Repetir Contraseña</label>
                         <input type="password" id="repeat_password" name="repeat_password" required>
                     </div>
-                    <button type="submit" class="enviar" style="grid-column: 1 / -1; width: 100%; max-width: 250px; justify-self: center; background-color: lightblue; color: black;">Registrarse</button>
+                    <button type="submit" class="enviar">Registrarse</button>
+                </form>
+            </div>
+
+            <!-- FORMULARIO OCULTO CAMBIO PASSWORD -->
+            <div id="password-recovery-container" class="form-principal recovery-box">
+                <div class="form-avatar">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <h2>Cambio de Contraseña</h2>
+                <div id="recovery-msg" class="recovery-msg"></div>
+                <form id="form-recuperar" class="form-grid form-flex-column">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    <div class="form-group full-width-group">
+                        <label for="rec_usuario">Nombre de Usuario</label>
+                        <input type="text" id="rec_usuario" required>
+                    </div>
+                    <div class="form-group full-width-group">
+                        <label for="rec_dni">DNI registrado</label>
+                        <input type="text" id="rec_dni" required>
+                    </div>
+                    <div class="form-group full-width-group">
+                        <label for="rec_pass">Nueva Contraseña</label>
+                        <input type="password" id="rec_pass" required>
+                    </div>
+                    <div class="form-group full-width-group">
+                        <label for="rec_pass2">Repita Contraseña</label>
+                        <input type="password" id="rec_pass2" required>
+                    </div>
+                    <button type="submit" id="btn-recuperar" class="enviar">Actualizar Contraseña</button>
+                    <p class="link-container">
+                        <a href="#" id="toggle-back" class="link-lightblue">Volver a Inicio de Sesión</a>
+                    </p>
                 </form>
             </div>
         </div>
         {% endif %}
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const toggleBtn = document.getElementById('toggle-password-form');
+                const toggleBackBtn = document.getElementById('toggle-back');
+                const container = document.getElementById('password-recovery-container');
+                const loginBox = document.getElementById('login-box');
+                const registerBox = document.getElementById('register-box');
+
+                if(toggleBtn) {
+                    toggleBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        loginBox.style.display = 'none';
+                        registerBox.style.display = 'none';
+                        container.style.display = 'block';
+                    });
+                }
+
+                if(toggleBackBtn) {
+                    toggleBackBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        container.style.display = 'none';
+                        loginBox.style.display = '';
+                        registerBox.style.display = '';
+                    });
+                }
+
+                const btnRecuperar = document.getElementById('btn-recuperar');
+                if(btnRecuperar) {
+                    btnRecuperar.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const nombre_usuario = document.getElementById('rec_usuario').value;
+                        const dni = document.getElementById('rec_dni').value;
+                        const nueva_password = document.getElementById('rec_pass').value;
+                        const repetir_password = document.getElementById('rec_pass2').value;
+                        const msgBox = document.getElementById('recovery-msg');
+
+                        if(!nombre_usuario || !dni || !nueva_password || !repetir_password) {
+                            msgBox.style.color = 'red';
+                            msgBox.innerHTML = 'Rellene todos los campos';
+                            return;
+                        }
+
+                        msgBox.innerHTML = 'Procesando...';
+                        msgBox.style.color = 'blue';
+
+                        try {
+                            const response = await fetch('/api/cliente/password/', {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                                },
+                                body: JSON.stringify({
+                                    nombre_usuario: nombre_usuario,
+                                    dni: dni,
+                                    nueva_password: nueva_password,
+                                    repetir_password: repetir_password
+                                })
+                            });
+
+                            const data = await response.json();
+                            
+                            if(data.status === 'ok') {
+                                msgBox.style.color = 'green';
+                                msgBox.innerHTML = data.msg;
+                                document.getElementById('form-recuperar').reset();
+                            } else {
+                                msgBox.style.color = 'red';
+                                msgBox.innerHTML = data.msg || 'Error desconocido';
+                            }
+                        } catch(e) {
+                            msgBox.style.color = 'red';
+                            msgBox.innerHTML = 'Fallo al conectar con el servidor';
+                        }
+                    });
+                }
+            });
+        </script>
     </main>
 
     <footer class="pie">
