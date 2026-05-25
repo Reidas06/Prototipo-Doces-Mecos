@@ -64,6 +64,10 @@
                         <input type="text" id="e-titulo" name="titulo" required>
                     </div>
                     <div class="form-group">
+                        <label for="e-precio">Precio (€)</label>
+                        <input type="number" id="e-precio" name="precio" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
                         <label for="e-imagen">Imagen (Opcional)</label>
                         <input type="file" id="e-imagen" name="imagen" accept="image/*">
                     </div>
@@ -95,6 +99,7 @@
                     <div class="producto-item" 
                          data-id="{{ producto.id }}" 
                          data-titulo="{{ producto.titulo }}" 
+                         data-precio="{{ producto.precio }}"
                          data-descripcion="{{ producto.descripcion|default:'' }}" 
                          data-categoria="{{ producto.categoria }}">
                         <a href="{% url 'descripcion' %}?id={{ producto.id }}" class="producto-enlace">

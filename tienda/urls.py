@@ -26,4 +26,5 @@ urlpatterns = [
     
     # API CLIENTES
     path('api/cliente/password/', views.api_cambiar_password, name='api_cambiar_password'),
+    path('api/pedido/crear/', views.api_crear_pedido, name='api_crear_pedido'),
 ]

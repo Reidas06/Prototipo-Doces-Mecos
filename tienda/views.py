@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from .models import Producto, Cliente, Buzon, Pedido
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from .models import Producto, Cliente, Buzon
@@ -42,6 +42,8 @@ def carrito(request):
     return render(request, 'tienda/Carrito.html')
 
 def pago(request):
+    if not request.user.is_authenticated:
+        return render(request, 'tienda/Pago.html', {'auth_required': True})
     return render(request, 'tienda/Pago.html')
 
 def formulario(request):
@@ -295,3 +297,38 @@ def api_cambiar_password(request):
         return Response({'status': 'ok', 'msg': 'Contraseña actualizada de manera exitosa.'}, status=status.HTTP_200_OK)
     except Cliente.DoesNotExist:
         return Response({'status': 'error', 'msg': 'El usuario o DNI proporcionado no es correcto.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def api_crear_pedido(request):
+    if not request.user.is_authenticated:
+        return Response({'status': 'error', 'msg': 'Debe iniciar sesión para realizar pedidos'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+    try:
+        cart = request.data.get('cart', [])
+        total = request.data.get('total', 0)
+        
+        if not cart:
+            return Response({'status': 'error', 'msg': 'El carrito está vacío'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Conectar con el Cliente (registrado en formulario)
+        cliente = Cliente.objects.get(usuario=request.user)
+        
+        # Guardar en base de datos el objeto genérico Pedido
+        pedido = Pedido.objects.create(cliente=cliente, total=total)
+        
+        # Iterar los productos insertados y rellenar relacción N:M
+        for item in cart:
+            prod_id = item.get('id')
+            if prod_id:
+                try:
+                    producto_obj = Producto.objects.get(id=prod_id)
+                    pedido.productos.add(producto_obj)
+                except Producto.DoesNotExist:
+                    continue # Omite items que han sido borrados de tienda temporalmente
+                    
+        return Response({'status': 'ok', 'msg': 'Pedido almacenado correctamente en base de datos'})
+
+    except Cliente.DoesNotExist:
+        return Response({'status': 'error', 'msg': 'No se encontró el perfil de cliente asociado'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'status': 'error', 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

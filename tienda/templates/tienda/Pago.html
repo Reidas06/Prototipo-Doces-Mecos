@@ -14,6 +14,12 @@
 </head>
 
 <body>
+    {% if auth_required %}
+    <script>
+        alert("Debes iniciar sesión para hacer pedidos.");
+        window.location.href = "{% url 'formulario' %}";
+    </script>
+    {% endif %}
 <header class="cabecera">
         <div class="cabecera-left">
             <a href="{% url 'inicio' %}"><img src="{% static 'tienda/img/Logo.jpg' %}" alt="Logo" class="logo"></a>
@@ -65,28 +71,7 @@
                 </div>
 
                 <form id="formulario-pago" class="formulario-pago">
-                    <div class="form-section">
-                        <h3><i class="fa-solid fa-truck"></i> Datos de envío</h3>
-                        <div class="form-group">
-                            <label for="nombre">Nome e Apelidos</label>
-                            <input type="text" id="nombre" name="nombre" required placeholder="Ex. María Pérez">
-                        </div>
-                        <div class="form-group">
-                            <label for="direccion">Enderezo</label>
-                            <input type="text" id="direccion" name="direccion" required placeholder="Ex. Rúa Principal, 15">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="ciudad">Localidade</label>
-                                <input type="text" id="ciudad" name="ciudad" required placeholder="Ex. Malpica">
-                            </div>
-                            <div class="form-group">
-                                <label for="cp">C.P.</label>
-                                <input type="text" id="cp" name="cp" required placeholder="15113" maxlength="5">
-                            </div>
-                        </div>
-                    </div>
-
+                    {% csrf_token %}
                     <div class="form-section">
                         <h3><i class="fa-regular fa-credit-card"></i> Datos da tarxeta</h3>
                         <div class="form-group">
@@ -135,7 +120,7 @@
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'resumen-item';
                     itemDiv.innerHTML = `
-                        <img src="{% static 'tienda/img/' %}${item.image}" alt="${item.name}">
+                        <img src="${item.image}" alt="${item.name}">
                         <div class="resumen-detalle">
                             <p class="resumen-nombre">${item.name}</p>
                             <p class="resumen-cant">Cantidade: ${item.quantity}</p>
@@ -155,25 +140,48 @@
                 const header = document.querySelector('.pago-header h2');
                 const headerIcon = document.querySelector('.pago-header i');
                 
-                form.addEventListener('submit', (e) => {
+                form.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     
-                    formGrid.style.display = 'none';
-                    header.style.display = 'none';
-                    headerIcon.style.display = 'none';
+                    try {
+                        const response = await fetch('/api/pedido/crear/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : ''
+                            },
+                            body: JSON.stringify({
+                                cart: cart,
+                                total: total
+                            })
+                        });
 
-                    mensaje.style.display = 'block';
-                    mensaje.innerHTML = `
-                        <div class="mensaje-exito">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <h3>Pago realizado con éxito</h3>
-                            <p>Grazas pola túa compra! O teu pedido está procesándose e enviarémolo axiña á túa morada.</p>
-                            <a href="{% url 'inicio' %}" class="boton-volver">Volver ao inicio</a>
-                        </div>
-                    `;
+                        const data = await response.json();
 
-                    // Vaciar carrito
-                    sessionStorage.removeItem('doces_e_mecos_cart');
+                        if (data.status === 'ok') {
+                            formGrid.style.display = 'none';
+                            header.style.display = 'none';
+                            headerIcon.style.display = 'none';
+
+                            mensaje.style.display = 'block';
+                            mensaje.innerHTML = `
+                                <div class="mensaje-exito">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    <h3>Pago realizado con éxito</h3>
+                                    <p>Grazas pola túa compra! O teu pedido está procesándose e enviarémolo axiña á túa morada.</p>
+                                    <a href="{% url 'inicio' %}" class="boton-volver">Volver ao inicio</a>
+                                </div>
+                            `;
+
+                            // Vaciar carrito
+                            sessionStorage.removeItem('doces_e_mecos_cart');
+                        } else {
+                            alert(data.msg || "Error al procesar el pedido.");
+                        }
+
+                    } catch (error) {
+                        alert("Hubo un error contactando al servidor. Por favor, revisa tu conexión.");
+                    }
                 });
             });
         </script>

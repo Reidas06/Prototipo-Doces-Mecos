@@ -12,6 +12,7 @@ class Producto(models.Model):
 
     titulo = models.CharField(max_length=200)
     titulo_gl = models.CharField(max_length=200, null=True, blank=True)
+    precio = models.DecimalField(max_digits=6, decimal_places=2, default=2.50)
     imagen = models.ImageField(upload_to='productos/', null=True, blank=True)
     descripcion = models.TextField(null=True, blank=True)
     descripcion_gl = models.TextField(null=True, blank=True)
@@ -62,3 +63,12 @@ class Buzon(models.Model):
 
     def __str__(self):
         return f"{self.asunto} - {self.usuario.username}"
+
+class Pedido(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    fecha_pedido = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    productos = models.ManyToManyField(Producto, related_name='pedidos', blank=True)
+
+    def __str__(self):
+        return f"Pedido #{self.id} - {self.cliente.nombre_usuario}"

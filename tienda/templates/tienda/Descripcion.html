@@ -153,8 +153,8 @@
                     const cartItem = {
                         id: product.id,
                         name: product.titulo,
-                        price: 2.50, // Precio ficticio para el prototipo
-                        image: product.imagen ? product.imagen.split('/').pop() : 'sea-9983074_640.jpg',
+                        price: parseFloat(product.precio) || 0.00,
+                        image: product.imagen ? product.imagen : '{% static "tienda/img/sea-9983074_640.jpg" %}',
                         quantity: quantity
                     };
                     addToCart(cartItem);

@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
         div.className = 'producto-item';
         div.dataset.id = item.id;
         div.dataset.titulo = item.titulo;
+        div.dataset.precio = item.precio || '2.50';
         div.dataset.descripcion = item.descripcion || '';
         div.dataset.categoria = item.categoria || 'ninguna';
 
@@ -131,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const item = editBtn.closest('.producto-item');
                 document.getElementById('e-id').value = item.dataset.id;
                 document.getElementById('e-titulo').value = item.dataset.titulo;
+                document.getElementById('e-precio').value = item.dataset.precio;
                 document.getElementById('e-descripcion').value = item.dataset.descripcion;
                 document.getElementById('e-categoria').value = item.dataset.categoria;
                 editModal.classList.add('active');
