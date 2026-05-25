@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Producto, Cliente
+from .models import Producto, Cliente, Buzon
 from django.db import IntegrityError
 from django.contrib.auth.models import User
 import json
@@ -115,6 +115,24 @@ def iniciar_sesion(request):
 def cerrar_sesion(request):
     logout(request)
     return redirect('formulario')
+
+def contacta(request):
+    success = None
+    error = None
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('formulario')
+
+        asunto = request.POST.get('asunto')
+        detalle = request.POST.get('detalle')
+
+        if asunto and detalle:
+            Buzon.objects.create(usuario=request.user, asunto=asunto, detalle=detalle)
+            success = "Tu consulta ha sido enviada exitosamente. ¡Nos pondremos en contacto contigo pronto!"
+        else:
+            error = "Por favor, completa todos los campos."
+            
+    return render(request, 'tienda/Contacta.html', {'success': success, 'error': error})
 
 # --- API PRODUCTOS ---
 

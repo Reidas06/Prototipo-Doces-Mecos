@@ -6,12 +6,9 @@
     <link rel="icon" type="image/x-icon" href="{% static 'tienda/img/faviconlogo.ico' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doces&Mecos</title>
-
-    <!-- FONT AWESOME -->
+    <title>Doces&Mecos - Contacta</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <link rel="stylesheet" href="{% static 'tienda/css/Carrito.css' %}">
+    <link rel="stylesheet" href="{% static 'tienda/css/Contacta.css' %}">
 </head>
 
 <body>
@@ -49,82 +46,41 @@
     <main class="principal">
         <div class="form-principal">
             <div class="form-avatar">
-                <i class="fa-solid fa-cart-shopping"></i>
+                <i class="fa-solid fa-envelope"></i>
             </div>
-            <h2>Carrito</h2>
+            <h2>Sugerencias y Contacto</h2>
 
-            <div class="carrito-contenedor" id="cart-items">
-                <!-- Los productos se cargarán aquí mediante JavaScript -->
-            </div>
+            {% if user.is_authenticated %}
+                {% if success %}
+                    <div class="alert alert-success">
+                        {{ success }}
+                    </div>
+                {% endif %}
+                
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endif %}
 
-            <div class="carrito-resumen-grid">
-                <button type="button" class="boton-pago" id="checkout-btn">Realizar pago</button>
-                <div class="caja-info-pago">
-                    <p id="total-amount">Cantidade total: 0,00€</p>
-                    <p>Para relizar o pago prema o botón que se atopa a esquerda</p>
+                <form class="form-flex-column" method="POST" action="{% url 'contacta' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="asunto">Asunto de la petición</label>
+                        <input type="text" id="asunto" name="asunto" required placeholder="Ej: Sugerencia de nuevos dulces">
+                    </div>
+                    <div class="form-group">
+                        <label for="detalle">Describe más detalladamente tu consulta</label>
+                        <textarea id="detalle" name="detalle" rows="6" required placeholder="Explícanos cómo podemos ayudarte o qué mejoras sugieres..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-enviar">Enviar Mensaje</button>
+                </form>
+            {% else %}
+                <div class="bloqueo-container">
+                    <p class="mensaje-bloqueo">Debes iniciar sesión para poder enviarnos sugerencias o contactar con el soporte de Doces&Mecos.</p>
+                    <a href="{% url 'formulario' %}" class="btn-iniciar-sesion">Ir a Iniciar Sesión</a>
                 </div>
-            </div>
-            <script src="{% static 'tienda/js/carrito.js' %}"></script>
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const cartContainer = document.getElementById('cart-items');
-                    const totalAmountDisplay = document.getElementById('total-amount');
-                    const checkoutBtn = document.getElementById('checkout-btn');
-
-                    function renderCart() {
-                        const cart = getCart();
-                        cartContainer.innerHTML = '';
-
-                        if (cart.length === 0) {
-                            cartContainer.innerHTML = '<p style="text-align:center; padding: 20px;">O teu carriño está valeiro.</p>';
-                            totalAmountDisplay.textContent = 'Cantidade total: 0,00€';
-                            return;
-                        }
-
-                        cart.forEach(item => {
-                            const productRow = document.createElement('div');
-                            productRow.className = 'producto-fila';
-                            productRow.innerHTML = `
-                                <div class="producto-img-box">
-                                    <img src="{% static 'tienda/img/' %}${item.image}" alt="${item.name}">
-                                </div>
-                                <div class="producto-detalles">
-                                    <button class="qty-btn" onclick="changeQty('${item.id}', -1)"><i class="fa-solid fa-minus"></i></button>
-                                    <span class="cant-box">${item.quantity}</span>
-                                    <button class="qty-btn" onclick="changeQty('${item.id}', 1)"><i class="fa-solid fa-plus"></i></button>
-                                    <p>${item.name}</p>
-                                </div>
-                                <button class="borrar-btn" onclick="removeItem('${item.id}')"><i class="fa-solid fa-trash"></i></button>
-                            `;
-                            cartContainer.appendChild(productRow);
-                        });
-
-                        const total = calculateTotal();
-                        totalAmountDisplay.textContent = `Cantidade total: ${total.toFixed(2).replace('.', ',')}€`;
-                    }
-
-                    window.changeQty = (id, delta) => {
-                        updateQuantity(id, delta);
-                        renderCart();
-                    };
-
-                    window.removeItem = (id) => {
-                        removeFromCart(id);
-                        renderCart();
-                    };
-
-                    checkoutBtn.addEventListener('click', () => {
-                        const cart = getCart();
-                        if (cart.length === 0) {
-                            alert('O carriño está valeiro!');
-                        } else {
-                            window.location.href = '{% url "pago" %}';
-                        }
-                    });
-
-                    renderCart();
-                });
-            </script>
+            {% endif %}
         </div>
     </main>
 

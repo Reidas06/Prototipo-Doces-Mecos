@@ -53,3 +53,12 @@ class Cliente(models.Model):
 
     def __str__(self):
         return f"{self.nombre_usuario} - {self.nombre} ({self.dni})"
+
+class Buzon(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    asunto = models.CharField(max_length=200)
+    detalle = models.TextField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.asunto} - {self.usuario.username}"
