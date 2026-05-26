@@ -208,10 +208,15 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
 
+            const formData = new FormData(formEdit);
+            if (document.getElementById('e-imagen').files.length === 0) {
+                formData.delete('imagen');
+            }
+
             try {
                 const res = await fetch(`/api/producto/editar/${id}/`, {
                     method: 'PUT',
-                    body: new FormData(formEdit),
+                    body: formData,
                     headers: {
                         'X-CSRFToken': getCookie('csrftoken')
                     }
@@ -233,6 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const newCat = document.getElementById('e-categoria').value;
 
                         item.dataset.titulo = document.getElementById('e-titulo').value;
+                        item.dataset.precio = document.getElementById('e-precio').value;
                         item.dataset.descripcion = document.getElementById('e-descripcion').value;
                         item.dataset.categoria = newCat;
                         item.querySelector('.producto-nombre').textContent = item.dataset.titulo;

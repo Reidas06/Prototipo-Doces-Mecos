@@ -310,8 +310,18 @@ def api_crear_pedido(request):
         if not cart:
             return Response({'status': 'error', 'msg': 'El carrito está vacío'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Conectar con el Cliente (registrado en formulario)
-        cliente = Cliente.objects.get(usuario=request.user)
+        # Conectar con el Cliente
+        try:
+            cliente = Cliente.objects.get(usuario=request.user)
+        except Cliente.DoesNotExist:
+            if request.user.is_staff:
+                # Las cuentas de administrador nativas no pasan por la pasarela de Cliente, pero les permitimos testear compras.
+                cliente, _ = Cliente.objects.get_or_create(
+                    usuario=request.user, 
+                    defaults={'nombre': 'Test Admin', 'dni': '0000000X', 'nombre_usuario': request.user.username, 'email': request.user.email}
+                )
+            else:
+                return Response({'status': 'error', 'msg': 'No se encontró el perfil de cliente asociado'}, status=status.HTTP_404_NOT_FOUND)
         
         # Guardar en base de datos el objeto genérico Pedido
         pedido = Pedido.objects.create(cliente=cliente, total=total)
@@ -328,7 +338,5 @@ def api_crear_pedido(request):
                     
         return Response({'status': 'ok', 'msg': 'Pedido almacenado correctamente en base de datos'})
 
-    except Cliente.DoesNotExist:
-        return Response({'status': 'error', 'msg': 'No se encontró el perfil de cliente asociado'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'status': 'error', 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
