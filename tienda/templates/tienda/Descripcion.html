@@ -52,21 +52,27 @@
                 <img id="p-img" src="{% static 'tienda/img/sea-9983074_640.jpg' %}" alt="Cargando...">
             </div>
 
-            <div class="producto-descripcion">
+            <div class="producto-info-derecha">
                 <h3 id="p-titulo">Cargando producto...</h3>
+                <h4 id="p-precio" class="producto-precio">0.00 €</h4>
                 <div id="p-desc">
                     <p>Espere un momento mientras recuperamos la información.</p>
                 </div>
-            </div>
 
-            <div class="compra-controles">
-                <div class="selector-cantidad">
-                    <button class="qty-btn" id="minus-btn"><i class="fa-solid fa-minus"></i></button>
-                    <span class="cant-box" id="product-qty">1</span>
-                    <button class="qty-btn" id="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                <div class="compra-controles-wrapper">
+                    <div class="selector-cantidad-container">
+                        <span class="lbl-cantidad">Cantidad</span>
+                        <div class="selector-cantidad">
+                            <button class="qty-btn" id="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                            <span class="cant-box" id="product-qty">1</span>
+                            <button class="qty-btn" id="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="compra-controles">
+                        <button type="button" class="boton-pago" id="add-to-cart-btn"><i class="fa-solid fa-cart-shopping" style="margin-right: 8px;"></i> Añadir al carrito</button>
+                    </div>
                 </div>
-
-                <button type="button" class="boton-pago" id="add-to-cart-btn">Añadir al carrito</button>
             </div>
         </div>
     </main>
@@ -129,6 +135,11 @@
                     pDesc.innerHTML = product.descripcion.split('\n').map(line => `<p>${line}</p>`).join('');
                 } else {
                     pDesc.innerHTML = "<p>Sin descripción disponible.</p>";
+                }
+
+                const pPrecio = document.getElementById('p-precio');
+                if (pPrecio) {
+                    pPrecio.textContent = parseFloat(product.precio || 0).toFixed(2) + " €";
                 }
 
                 // Aplicar el idioma actual inmediatamente desde el cache

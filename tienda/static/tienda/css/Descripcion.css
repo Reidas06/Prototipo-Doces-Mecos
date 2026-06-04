@@ -1,5 +1,8 @@
 /*Cabecera*/
-.logo { mix-blend-mode: multiply; }
+.logo {
+    mix-blend-mode: multiply;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -98,7 +101,7 @@ body {
     z-index: 2000;
 }
 
-.menu-checkbox:checked ~ .desplegable {
+.menu-checkbox:checked~.desplegable {
     display: block;
 }
 
@@ -131,7 +134,7 @@ body {
 
 /*Cuerpo*/
 .principal {
-    padding: 100px 10%; 
+    padding: 100px 10%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -144,37 +147,55 @@ body {
     padding: 50px;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    width: 100%; 
-    max-width: 580px;
+    width: 100%;
+    max-width: 900px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    align-items: flex-start;
 }
 
 .producto-detalle-img {
+    flex: 1;
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 0;
 }
 
 .producto-detalle-img img {
-    max-height: 320px;
-    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 10px;
 }
 
-.producto-descripcion {
-    text-align: center;
+.producto-info-derecha {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
     color: black;
-    margin-bottom: 50px;
 }
 
-.producto-descripcion h3 {
-    font-size: 1.6rem;
+.producto-info-derecha h3 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #1a2f4c;
+}
+
+.producto-precio {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1a2f4c;
     margin-bottom: 25px;
-    color: black;
 }
 
-.producto-descripcion p {
-    font-size: 15px;
-    line-height: 1.8;
-    margin-bottom: 12px;
+.producto-info-derecha p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #555;
 }
 
 .carrito-contenedor {
@@ -201,11 +222,23 @@ body {
     font-weight: bold;
 }
 
-.compra-controles {
+.compra-controles-wrapper {
+    margin-top: auto;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.selector-cantidad-container {
+    display: flex;
     align-items: center;
-    gap: 50px;
+    gap: 15px;
+}
+
+.lbl-cantidad {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
 }
 
 .selector-cantidad {
@@ -217,13 +250,13 @@ body {
 .qty-btn {
     background: whitesmoke;
     border: 1px solid gray;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 50%;
     font-size: 14px;
     transition: background 0.2s;
 }
@@ -232,20 +265,39 @@ body {
     background: #e0e0e0;
 }
 
+.cant-box {
+    min-width: 40px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    background: none;
+}
+
+.compra-controles {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .boton-pago {
-    padding: 15px 25px;
-    background: white;
-    border: 2px solid gray;
-    border-radius: 10px;
+    padding: 15px 30px;
+    background: lightpink;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 4px 4px 0px black;
-    transition: transform 0.1s;
+    box-shadow: 0 4px 10px rgba(26, 47, 76, 0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
+    width: 100%;
+    max-width: 250px;
 }
 
 .boton-pago:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0px black;
+    transform: translateY(2px);
+    box-shadow: 0 2px 5px rgba(26, 47, 76, 0.3);
 }
 
 .carrito-resumen-grid {
@@ -336,11 +388,13 @@ body {
 
     .form-principal {
         padding: 30px 20px;
-        max-width: 100%; 
+        max-width: 100%;
         box-sizing: border-box;
+        flex-direction: column;
+        gap: 30px;
     }
-    
-    .pie-left p{
+
+    .pie-left p {
         font-size: 16px;
     }
 
@@ -364,9 +418,8 @@ body {
         height: auto;
     }
 
-    .compra-controles {
-        flex-direction: column;
-        gap: 20px;
+    .compra-controles-wrapper {
+        align-items: center;
         width: 100%;
     }
 
@@ -374,11 +427,12 @@ body {
         width: 100%;
         max-width: none;
     }
-    .pie-left p{
+
+    .pie-left p {
         font-size: 12px;
     }
 
-    .pie-right p{
+    .pie-right p {
         font-size: 12px;
     }
 }
