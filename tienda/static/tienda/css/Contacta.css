@@ -328,3 +328,25 @@ body {
         font-size: 24px;
     }
 }
+
+@media (max-width: 441px) {
+    .cabecera-center h1 {
+        font-size: 20px;
+    }
+
+    .cabecera-left .logo {
+        height: 40px;
+    }
+
+    .pie-left p {
+        font-size: 12px;
+    }
+
+    .pie-right p {
+        font-size: 12px;
+    }
+    
+    .form-principal {
+        padding: 20px;
+    }
+}
