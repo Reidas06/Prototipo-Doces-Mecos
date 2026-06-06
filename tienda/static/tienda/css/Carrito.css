@@ -240,6 +240,43 @@ body {
     color: rgb(255, 95, 161);
 }
 
+/* Área de resumen del carrito */
+.carrito-resumen-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.caja-info-pago {
+    order: -1; 
+    text-align: center;
+}
+
+#total-amount {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.boton-pago {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #ff7eb3, #ff94b8);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    max-width: 250px;
+    width: 100%;
+}
+
+.boton-pago:hover {
+    background: linear-gradient(135deg, #ff5fa1, #ff7eb3);
+}
+
 /*Pie de página*/
 .pie {
     background-color: lightpink;

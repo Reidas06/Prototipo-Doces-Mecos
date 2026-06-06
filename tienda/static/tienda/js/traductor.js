@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Carrito extra
             'carriño_valeiro': 'O teu carriño está valeiro.',
-            'info_pago': 'Para realizar o pago prema o botón que se atopa a esquerda',
             'pago_title': 'Realizar Pago',
             'tu_pedido': 'O teu pedido',
             'datos_tarxeta': '<i class="fa-regular fa-credit-card"></i> Datos da tarxeta',
@@ -153,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Carrito extra
             'carriño_valeiro': 'Tu carrito está vacío.',
-            'info_pago': 'Para realizar el pago presione el botón que se encuentra a la izquierda',
             'pago_title': 'Realizar Pago',
             'tu_pedido': 'Tu pedido',
             'datos_tarxeta': '<i class="fa-regular fa-credit-card"></i> Datos de la tarjeta',
@@ -300,9 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (checkoutBtn) checkoutBtn.textContent = staticTranslations[currentLang].btn_pago;
 
         // Carrito.html - extra texts
-        const cInfoPago = document.querySelector('.caja-info-pago p:last-child');
-        if (cInfoPago && cInfoPago.id !== 'total-amount') cInfoPago.textContent = staticTranslations[currentLang].info_pago;
-
         const cartItemsDiv = document.getElementById('cart-items');
         if (cartItemsDiv && cartItemsDiv.innerHTML.includes('O teu carriño está valeiro.') || (cartItemsDiv && cartItemsDiv.innerHTML.includes('Tu carrito está vacío.'))) {
             cartItemsDiv.innerHTML = `<p style="text-align:center; padding: 20px;">${staticTranslations[currentLang].carriño_valeiro}</p>`;

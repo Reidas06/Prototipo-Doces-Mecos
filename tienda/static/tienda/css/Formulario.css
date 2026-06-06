@@ -420,8 +420,19 @@ body {
 }
 
 .btn-cerrar-sesion {
-    background-color: lightpink;
-    color: black;
-    max-width: 200px;
+    padding: 12px;
+    background: linear-gradient(135deg, #ff7eb3, #ff94b8);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 200px;
     margin: 0 auto;
+    display: block;
+}
+
+.btn-cerrar-sesion:hover {
+    background: linear-gradient(135deg, #ff5fa1, #ff7eb3);
 }

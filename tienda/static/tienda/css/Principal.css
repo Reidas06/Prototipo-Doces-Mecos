@@ -167,8 +167,9 @@ body {
 }
 
 .contenedor-imagen img {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    max-width: 640px;
+    height: 350px;
     border-radius: 4px;
 }
 
